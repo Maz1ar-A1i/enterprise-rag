@@ -1,0 +1,30 @@
+{
+  "total_chunks": 10548,
+  "chunks_removed_dedup": 3082,
+  "seed_records": 290,
+  "domain_records": 12920,
+  "by_topic": {
+    "docker": 789,
+    "fastapi": 335,
+    "github_actions": 339,
+    "helm": 331,
+    "kubernetes": 2574,
+    "linux_commands": 30,
+    "nginx": 1503,
+    "postgresql": 1373,
+    "prometheus": 327,
+    "cross_topic": 267,
+    "linux_systemd": 947,
+    "networking_tls": 826,
+    "cloud_infrastructure": 284,
+    "observability": 314,
+    "security": 309
+  },
+  "token_stats": {
+    "mean": 231.9,
+    "min": 31,
+    "max": 398,
+    "median": 207
+  },
+  "built_at": "2026-10-05"
+}

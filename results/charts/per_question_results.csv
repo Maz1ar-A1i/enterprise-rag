@@ -1,0 +1,3 @@
+id,category,question,recall_1,recall_5,recall_10,mrr,ndcg_10,correctness_score,faithfulness_score,citation_precision,is_refusal,expected_refusal,total_latency_ms,retrieval_latency_ms,rerank_latency_ms,generation_latency_ms
+q_00031,direct,"In postgresql, what are the key requirements and operational mechanics for postgresql?",0.0,0.0,0.0,0.0,0.0,,,1.0,False,False,19367.502000008244,49.73349999636412,19315.861600014614,0.6101999897509813
+q_00579,multi_hop,"In an integrated enterprise stack combining nginx and linux_systemd, how do the configuration constraints of nginx interact with linux_systemd during deployment?",0.0,0.0,0.0,0.0,0.0,,,0.0,True,False,10964.584200002719,107.97959999763407,10855.028199992375,0.8128000190481544

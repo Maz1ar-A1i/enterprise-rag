@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-13 16:41:33",
+  "ablation_runs": [
+    {
+      "configuration": "L1: Dense Retrieval Alone",
+      "recall_at_1": 80.0,
+      "recall_at_5": 80.0,
+      "mrr": 0.8,
+      "faithfulness": 45.0,
+      "adversarial_attacks_quarantined": 0,
+      "avg_latency_ms": 46.4
+    },
+    {
+      "configuration": "L2: Hybrid Retrieval (BM25 + Dense)",
+      "recall_at_1": 40.0,
+      "recall_at_5": 80.0,
+      "mrr": 0.6,
+      "faithfulness": 49.7,
+      "adversarial_attacks_quarantined": 0,
+      "avg_latency_ms": 68.7
+    },
+    {
+      "configuration": "L3: Hybrid + FT Reranker",
+      "recall_at_1": 40.0,
+      "recall_at_5": 80.0,
+      "mrr": 0.6,
+      "faithfulness": 49.7,
+      "adversarial_attacks_quarantined": 0,
+      "avg_latency_ms": 75.0
+    },
+    {
+      "configuration": "L4: Hybrid + Reranker + Conflict Resolver",
+      "recall_at_1": 40.0,
+      "recall_at_5": 80.0,
+      "mrr": 0.6,
+      "faithfulness": 49.7,
+      "adversarial_attacks_quarantined": 0,
+      "avg_latency_ms": 125.5
+    },
+    {
+      "configuration": "L5: Full Defended System (L7: Security + Conflict + Reranker + Verifier)",
+      "recall_at_1": 40.0,
+      "recall_at_5": 80.0,
+      "mrr": 0.6,
+      "faithfulness": 64.1,
+      "adversarial_attacks_quarantined": 0,
+      "avg_latency_ms": 74.8
+    }
+  ]
+}

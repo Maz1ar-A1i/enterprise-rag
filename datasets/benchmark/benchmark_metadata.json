@@ -1,0 +1,18 @@
+{
+  "total": 1000,
+  "visible_count": 700,
+  "hidden_count": 300,
+  "by_category": {
+    "version_sensitive": 100,
+    "multi_hop": 150,
+    "ambiguous": 50,
+    "unanswerable": 50,
+    "direct": 300,
+    "troubleshooting": 200,
+    "cross_document": 100,
+    "distractor_heavy": 50
+  },
+  "created_at": "2026-10-05",
+  "seed": 42,
+  "note": "questions_hidden.jsonl is the mentor-held hidden evaluation set."
+}

@@ -1,0 +1,159 @@
+{
+  "query": "what is postgress, kubernetees and what is docker? Compare and contrast with their pros and cons in a table",
+  "answer": "## Docker – Overview & Architectural Features  \n\n- **Container Packaging & Portability** – Docker packages services into lightweight containers that can run consistently across environments.  \n- **Storage Options**  \n  - *Named volumes* are managed by Docker and are ideal for durable container data.  \n  - *Bind mounts* map host paths into containers, useful for development or when the host owns the files. Containers should not rely on their writable layer for database durability (e.g., PostgreSQL) [Source: https://docs.docker.com/get-started/docker-overview/].  \n- **Multi‑service Definition with Docker Compose** – Compose lets you describe multiple services, networks, and volumes in a single YAML file, enabling local integration of an enterprise RAG stack (FastAPI, PostgreSQL, NGINX, Prometheus, model workers) with explicit dependencies and health checks [Source: https://docs.docker.com/get-started/docker-overview/].  \n- **Networking Basics** – Services on the default Compose network discover each other by service name, avoiding hard‑coded IP addresses (e.g., API container reaching PostgreSQL) [Source: https://docs.docker.com/get-started/docker-overview/].  \n- **Logging & Troubleshooting** – `docker compose ps`, `logs`, `exec`, and especially `docker compose config` help debug request paths across NGINX → API → retrieval/model → PostgreSQL/vector store [Source: https://docs.docker.com/get-started/docker-overview/].  \n- **Daemon Configuration & Resource Limits** – The `/etc/docker/daemon.json` file controls log driver, storage driver (overlay2), ulimits, live‑restore, etc. Example directives include memory limits (`--memory=256m` to `--memory=768m`) and CPU quotas (`--cpus=1.5` to `2.0`) for different reference architectures [Source: https://docs.docker.com/dockerd_daemon_json/].\n\n---\n\n## Kubernetes – Overview & Architectural Features  \n\n• **Kubernetes overview architecture features**: Insufficient comparative information found in the provided documentation.\n\n---\n\n## PostgreSQL – Overview & Architectural Features  \n\n- **Role in Enterprise RAG Architecture** – PostgreSQL stores authoritative structured metadata and operational state. It is **not** intended to replace a vector index unless a PostgreSQL‑based vector solution is deliberately chosen. The architecture separates relational metadata, retrieval index, and object/document storage [Source: https://www.postgresql.org/docs/current/indexes.html].  \n- **Persistent Storage Considerations** – For durability, PostgreSQL data should be stored on volumes that are independent of the container’s writable layer (e.g., using Docker named volumes or external storage) [Source: https://docs.docker.com/get-started/docker-overview/].\n\n---\n\n## Comparison – Docker vs. Kubernetes vs. PostgreSQL  \n\n| Aspect | Docker | Kubernetes | PostgreSQL |\n|--------|--------|------------|------------|\n| **Primary Purpose** | Container runtime & packaging | Container orchestration & cluster management",
+  "refused": false,
+  "mode": "advanced",
+  "model": "openai/gpt-oss-120b",
+  "sub_queries": [
+    "what is docker overview architecture features",
+    "what is kubernetes overview architecture features",
+    "what is postgresql overview architecture features",
+    "compare and contrast docker vs kubernetes vs postgresql pros and cons"
+  ],
+  "retrieval_ms": 7291.3,
+  "generation_ms": 0.0,
+  "total_ms": 7295.2,
+  "citations": [
+    {
+      "source": "docs.docker.com",
+      "url": "https://docs.docker.com/get-started/docker-overview/"
+    },
+    {
+      "source": "docs.docker.com",
+      "url": "https://docs.docker.com/get-started/docker-overview/"
+    },
+    {
+      "source": "docs.docker.com",
+      "url": "https://docs.docker.com/get-started/docker-overview/"
+    },
+    {
+      "source": "docs.docker.com",
+      "url": "https://docs.docker.com/get-started/docker-overview/"
+    },
+    {
+      "source": "docs.docker.com",
+      "url": "https://docs.docker.com/dockerd_daemon_json/"
+    },
+    {
+      "source": "www.postgresql.org",
+      "url": "https://www.postgresql.org/docs/current/indexes.html"
+    },
+    {
+      "source": "docs.docker.com",
+      "url": "https://docs.docker.com/get-started/docker-overview/"
+    }
+  ],
+  "chunks_used_in_context": 10,
+  "chunks": [
+    {
+      "rank": 1,
+      "chunk_id": "cross_topic__01_enterprise_reference_architecture__001",
+      "source": "cross_topic",
+      "topic": "cross_topic",
+      "version": "latest",
+      "url": "https://kubernetes.io/docs/home/",
+      "tokens": 83,
+      "score": 0.1655,
+      "text": "Reference request path\n\nA representative enterprise path is client -> NGINX/TLS -> FastAPI -> query processing -> hybrid retrieval -> reranker -> context selection -> generator -> citation verifier -> response. PostgreSQL can store structured metadata and experiment state, while a vector index stores dense retrieval data. Prometheus monitors the runtime. Docker packages services; Kubernetes and Helm can deploy them; GitHub Actions can build, test and promote artifacts."
+    },
+    {
+      "rank": 2,
+      "chunk_id": "docker__01_fundamentals__006",
+      "source": "docker",
+      "topic": "docker",
+      "version": "latest",
+      "url": "https://docs.docker.com/",
+      "tokens": 71,
+      "score": 0.0756,
+      "text": "Volumes and bind mounts\n\nA named volume is managed by Docker and is suited to durable container data. A bind mount maps a host path into the container and is useful for development or when the host deliberately owns the files. Containers should not rely on their writable layer for database durability. For PostgreSQL, persistent storage should be designed independently of the application container lifecycle."
+    },
+    {
+      "rank": 3,
+      "chunk_id": "docker__02_compose_storage_networking__001",
+      "source": "docker",
+      "topic": "docker",
+      "version": "latest",
+      "url": "https://docs.docker.com/",
+      "tokens": 76,
+      "score": 0.0368,
+      "text": "Compose as a multi-service definition\n\nDocker Compose lets a project describe multiple services, networks and volumes in one YAML model. An enterprise RAG stack can use Compose for local integration: FastAPI API, PostgreSQL metadata store, NGINX edge proxy, Prometheus metrics, and optional model/retrieval workers can be defined as separate services with explicit dependencies and health checks."
+    },
+    {
+      "rank": 4,
+      "chunk_id": "docker__01_fundamentals__007",
+      "source": "docker",
+      "topic": "docker",
+      "version": "latest",
+      "url": "https://docs.docker.com/",
+      "tokens": 71,
+      "score": 0.0361,
+      "text": "Docker networking basics\n\nA container can connect to networks and communicate with other containers according to the network configuration. In Compose, services on the default project network can discover one another by service name. This is important for an enterprise stack: an API container can reach PostgreSQL using its Compose service name instead of relying on a hard-coded container IP address."
+    },
+    {
+      "rank": 5,
+      "chunk_id": "prometheus__03_observability_for_rag__009",
+      "source": "prometheus",
+      "topic": "prometheus",
+      "version": "latest",
+      "url": "https://prometheus.io/docs/introduction/overview/",
+      "tokens": 37,
+      "score": 0.018,
+      "text": "Failure correlation\n\nWhen a latency spike occurs, correlate Prometheus data with NGINX access logs, FastAPI logs, Kubernetes events and PostgreSQL activity. A single metric rarely proves root cause."
+    },
+    {
+      "rank": 6,
+      "chunk_id": "postgresql__03_backup_security_operations__010",
+      "source": "postgresql",
+      "topic": "postgresql",
+      "version": "latest",
+      "url": "https://www.postgresql.org/docs/current/",
+      "tokens": 52,
+      "score": 0.0164,
+      "text": "PostgreSQL in the enterprise RAG architecture\n\nUse PostgreSQL for authoritative structured metadata and operational state, not as a substitute for the vector index unless the architecture deliberately chooses a PostgreSQL-based vector solution. Separate the concerns of relational metadata, retrieval index and object/document storage."
+    },
+    {
+      "rank": 7,
+      "chunk_id": "docker__dockerd__dockerd_daemon_json_004",
+      "source": "docker",
+      "topic": "docker",
+      "version": "latest",
+      "url": "https://docs.docker.com/",
+      "tokens": 257,
+      "score": 0.0107,
+      "text": "Docker Daemon Configuration and Storage Options (Module 004)\n\n### Docker Daemon Configuration and Storage Options - Reference Architecture 004\n\nConfiguration in /etc/docker/daemon.json controls log-driver, storage-driver overlay2, default-ulimits, live-restore, and insecure-registries.\n\n#### Container Runtime Mechanics #004\nIn containerized infrastructure variant 004, process isolation and security controls must be strictly maintained.\nKey operational directives:\n- Set memory limit `--memory=256m` and CPU quota `--cpus=1.5`.\n- Configure logging max-size to 50m with 3 rotations in daemon.json.\n\n```dockerfile\n# Production Dockerfile for dockerd_daemon_json #004\nFROM golang:1.22-alpine AS builder\nWORKDIR /src\nCOPY go.mod go.sum ./\nRUN --mount=type=cache,target=/go/pkg/mod go mod download\nCOPY . .\nRUN CGO_ENABLED=0 go build -ldflags=\"-s -w\" -o /bin/app-004 .\n\nFROM alpine:3.20\nRUN adduser -D -u 10001 appuser\nUSER 10001\nCOPY --from=builder /bin/app-004 /bin/app\nENTRYPOINT [\"/bin/app\"]\n```"
+    },
+    {
+      "rank": 8,
+      "chunk_id": "docker__02_compose_storage_networking__007",
+      "source": "docker",
+      "topic": "docker",
+      "version": "latest",
+      "url": "https://docs.docker.com/",
+      "tokens": 78,
+      "score": 0.0107,
+      "text": "Logging and troubleshooting Compose\n\nUse `docker compose ps`, `docker compose logs`, `docker compose exec`, and `docker compose config` when debugging. `docker compose config` is particularly useful for checking the fully resolved configuration. When a request fails, trace the path: client -> NGINX -> API -> retrieval/model service -> PostgreSQL/vector store, and inspect logs at each boundary."
+    },
+    {
+      "rank": 9,
+      "chunk_id": "docker__dockerd__dockerd_daemon_json_005",
+      "source": "docker",
+      "topic": "docker",
+      "version": "latest",
+      "url": "https://docs.docker.com/",
+      "tokens": 257,
+      "score": 0.0101,
+      "text": "Docker Daemon Configuration and Storage Options (Module 005)\n\n### Docker Daemon Configuration and Storage Options - Reference Architecture 005\n\nConfiguration in /etc/docker/daemon.json controls log-driver, storage-driver overlay2, default-ulimits, live-restore, and insecure-registries.\n\n#### Container Runtime Mechanics #005\nIn containerized infrastructure variant 005, process isolation and security controls must be strictly maintained.\nKey operational directives:\n- Set memory limit `--memory=512m` and CPU quota `--cpus=2.0`.\n- Configure logging max-size to 50m with 3 rotations in daemon.json.\n\n```dockerfile\n# Production Dockerfile for dockerd_daemon_json #005\nFROM golang:1.22-alpine AS builder\nWORKDIR /src\nCOPY go.mod go.sum ./\nRUN --mount=type=cache,target=/go/pkg/mod go mod download\nCOPY . .\nRUN CGO_ENABLED=0 go build -ldflags=\"-s -w\" -o /bin/app-005 .\n\nFROM alpine:3.20\nRUN adduser -D -u 10001 appuser\nUSER 10001\nCOPY --from=builder /bin/app-005 /bin/app\nENTRYPOINT [\"/bin/app\"]\n```"
+    },
+    {
+      "rank": 10,
+      "chunk_id": "docker__dockerd__dockerd_daemon_json_002",
+      "source": "docker",
+      "topic": "docker",
+      "version": "latest",
+      "url": "https://docs.docker.com/",
+      "tokens": 257,
+      "score": 0.0095,
+      "text": "Docker Daemon Configuration and Storage Options (Module 002)\n\n### Docker Daemon Configuration and Storage Options - Reference Architecture 002\n\nConfiguration in /etc/docker/daemon.json controls log-driver, storage-driver overlay2, default-ulimits, live-restore, and insecure-registries.\n\n#### Container Runtime Mechanics #002\nIn containerized infrastructure variant 002, process isolation and security controls must be strictly maintained.\nKey operational directives:\n- Set memory limit `--memory=768m` and CPU quota `--cpus=2.0`.\n- Configure logging max-size to 50m with 3 rotations in daemon.json.\n\n```dockerfile\n# Production Dockerfile for dockerd_daemon_json #002\nFROM golang:1.22-alpine AS builder\nWORKDIR /src\nCOPY go.mod go.sum ./\nRUN --mount=type=cache,target=/go/pkg/mod go mod download\nCOPY . .\nRUN CGO_ENABLED=0 go build -ldflags=\"-s -w\" -o /bin/app-002 .\n\nFROM alpine:3.20\nRUN adduser -D -u 10001 appuser\nUSER 10001\nCOPY --from=builder /bin/app-002 /bin/app\nENTRYPOINT [\"/bin/app\"]\n```"
+    }
+  ]
+}

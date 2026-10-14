@@ -1,0 +1,63 @@
+paths:
+  seed_corpus:      domain_trained_enterprise_corpus/domain_trained_enterprise_corpus/section_records.jsonl
+  corpus_raw:       corpus/raw
+  corpus_processed: corpus/processed
+  indexes:          indexes/phase3
+  benchmark:        datasets/benchmark
+  results:          results
+  logs:             logs
+corpus:
+  min_chunk_tokens: 30
+  max_chunk_tokens: 400
+  chunk_overlap_tokens: 50
+  dedup_jaccard_threshold: 0.85
+  dedup_num_perm: 128
+embedding:
+  model_name: BAAI/bge-base-en-v1.5
+  adapter_path: phase3_bge_fixed_final/adapter
+  dimensions: 768
+  batch_size: 64
+  normalize: true
+  query_prefix: Represent this sentence for searching relevant passages
+  device: cpu
+reranker:
+  model_name: BAAI/bge-reranker-base
+  adapter_path: reranker_phase2/adapter
+  top_k_input: 50
+  top_k_output: 5
+  batch_size: 16
+  device: cpu
+bm25:
+  top_k: 50
+dense:
+  top_k: 50
+hybrid:
+  rrf_k: 60
+  top_k: 50
+generation:
+  model: openai/gpt-oss-120b
+  temperature: 0.1
+  max_tokens: 3000
+  context_token_budget: 5000
+  rate_limit_rpm: 28
+evaluation:
+  judge_model: openai/gpt-oss-20b
+  recall_k_values:
+    - 1
+    - 5
+    - 10
+  ndcg_k: 10
+  faithfulness_threshold: 0.9
+  save_per_question: true
+benchmark:
+  visible_file: datasets/benchmark/questions_visible.jsonl
+  hidden_file: datasets/benchmark/questions_hidden.jsonl
+  categories:
+    - direct
+    - multi_hop
+    - troubleshooting
+    - cross_document
+    - version_sensitive
+    - ambiguous
+    - unanswerable
+    - distractor_heavy

@@ -1,0 +1,29 @@
+{
+  "base_model_name": "BAAI/bge-reranker-base",
+  "max_length": 512,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "target_modules": [
+    "query",
+    "key",
+    "value",
+    "dense"
+  ],
+  "questions_file": "/kaggle/input/datasets/mazhar99/question-visible/questions_visible.jsonl",
+  "chunks_file": "/kaggle/input/datasets/mazhar99/chunks/chunks.jsonl",
+  "num_train_epochs": 4,
+  "learning_rate": 0.0002,
+  "per_device_train_batch_size": 8,
+  "per_device_eval_batch_size": 16,
+  "gradient_accumulation_steps": 2,
+  "warmup_ratio": 0.1,
+  "weight_decay": 0.01,
+  "seed": 42,
+  "num_negatives_per_positive": 4,
+  "train_ratio": 0.8,
+  "val_ratio": 0.1,
+  "test_ratio": 0.1,
+  "output_dir": "/kaggle/working/reranker_phase2_output",
+  "package_dir": "/kaggle/working/reranker_phase2"
+}

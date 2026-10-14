@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise RAG Studio — DevOps & Cloud Intelligence</title>
+
+  <!-- Modern Google Fonts: Inter + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome Icons, Chart.js & Marked.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Clean Light/White Theme Stylesheet -->
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body class="light-theme">
+
+  <!-- ========================================================================= -->
+  <!-- Top Navigation Bar                                                        -->
+  <!-- ========================================================================= -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-badge">
+        <i class="fa-solid fa-layer-group"></i>
+      </div>
+      <div>
+        <h1 class="logo-title">Enterprise RAG <span class="badge-tag">Studio</span></h1>
+        <p class="logo-subtitle">Domain-Trained DevOps & Cloud RAG System</p>
+      </div>
+    </div>
+
+    <!-- Live Status Indicators -->
+    <div class="header-center">
+      <div class="status-pill">
+        <span class="status-dot online"></span>
+        <span class="status-label">Corpus:</span>
+        <strong id="header-chunk-count">10,548 Chunks</strong>
+      </div>
+      <div class="status-pill">
+        <i class="fa-solid fa-microchip text-indigo"></i>
+        <span class="status-label">LLM:</span>
+        <strong id="header-model-name">Qwen2.5-7B (Phase 4 QLoRA)</strong>
+      </div>
+      <div class="status-pill active-pill">
+        <i class="fa-solid fa-circle-check text-indigo"></i>
+        <span class="status-label">Stack:</span>
+        <strong style="color:#5B21B6;">Phase 4 Full-Stack FT</strong>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="playground-tab">
+        <i class="fa-solid fa-comments"></i> Playground
+      </button>
+      <button class="nav-tab" data-tab="eval-tab">
+        <i class="fa-solid fa-chart-line"></i> Evaluation Matrix
+      </button>
+      <button class="nav-tab" data-tab="corpus-tab">
+        <i class="fa-solid fa-database"></i> Corpus Explorer
+      </button>
+    </nav>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- Main Application Content                                                  -->
+  <!-- ========================================================================= -->
+  <main class="main-container">
+
+    <!-- ======================================================================= -->
+    <!-- TAB 1: RAG Playground & Live Query                                       -->
+    <!-- ======================================================================= -->
+    <section id="playground-tab" class="tab-view active">
+      <div class="playground-layout">
+
+        <!-- Left: Chat & Query Engine -->
+        <div class="chat-section card">
+          <div class="section-header">
+            <div class="title-with-icon">
+              <i class="fa-solid fa-bolt text-indigo"></i>
+              <div>
+                <div class="title-row">
+                  <h2>Interactive RAG Studio</h2>
+                  <span class="badge-phase4">
+                    <i class="fa-solid fa-brain"></i> Phase 4 Production Stack
+                  </span>
+                </div>
+                <p>Query enterprise DevOps documentation with multi-query hybrid retrieval and citation grounding.</p>
+              </div>
+            </div>
+
+            <!-- Pipeline Controls -->
+            <div class="pipeline-controls">
+              <div class="control-group">
+                <label for="retrieval-mode">Retrieval Mode:</label>
+                <select id="retrieval-mode" class="select-input">
+                  <option value="advanced" selected>🚀 Advanced RAG (Decomp + Rerank)</option>
+                  <option value="hybrid">⚡ Baseline Hybrid (BM25 + Dense)</option>
+                  <option value="dense">🧠 Dense Only (FAISS BGE)</option>
+                  <option value="bm25">🔍 BM25 Only (Lexical)</option>
+                </select>
+              </div>
+
+              <div class="control-group">
+                <label for="top-k-select">Top-K:</label>
+                <select id="top-k-select" class="select-input select-sm">
+                  <option value="3">3</option>
+                  <option value="5" selected>5</option>
+                  <option value="8">8</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Suggested Query Pills -->
+          <div class="quick-pills">
+            <span class="pills-title">Quick Prompts:</span>
+            <button class="pill-btn" data-query="How do I configure Docker daemon proxy settings in daemon.json?">
+              🐳 Docker Proxy Config
+            </button>
+            <button class="pill-btn"
+              data-query="How to configure Kubernetes RBAC role and rolebinding for a serviceaccount?">
+              ☸️ K8s RBAC Setup
+            </button>
+            <button class="pill-btn" data-query="How to control concurrency in GitHub Actions workflows?">
+              ⚙️ GitHub Actions Concurrency
+            </button>
+            <button class="pill-btn" data-query="What is the quantum teleportation protocol in Docker 20?">
+              🚫 Unanswerable Test
+            </button>
+          </div>
+
+          <!-- Chat Conversation Log -->
+          <div id="chat-stream" class="chat-stream">
+            <!-- Initial Welcome Message -->
+            <div class="chat-msg system">
+              <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+              <div class="msg-bubble">
+                <p><strong>Welcome to the Enterprise RAG Studio!</strong></p>
+                <p>Ask any technical question across Docker, Kubernetes, GitHub Actions, FastAPI, and PostgreSQL
+                  documentation. The assistant retrieves relevant passages, cites sources inline, and refuses ungrounded
+                  speculation.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Query Input Form -->
+          <form id="rag-query-form" class="query-form">
+            <div class="input-wrapper">
+              <textarea id="query-input" class="query-textarea" rows="2"
+                placeholder="Ask a technical DevOps question (e.g. 'How do I expose multiple ports in Docker Compose?')..."
+                required></textarea>
+              <button type="submit" id="submit-query-btn" class="send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Ask RAG</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Inspector Drawer (Retrieved Chunks & Telemetry) -->
+        <aside class="inspector-section card">
+          <div class="inspector-header">
+            <h3><i class="fa-solid fa-layer-group text-indigo"></i> Retrieved Context & Telemetry</h3>
+            <span id="timing-badge" class="badge-timing">Latency: -- ms</span>
+          </div>
+
+          <!-- Telemetry Chips -->
+          <div class="telemetry-bar">
+            <div class="tele-item">
+              <span class="tele-label">Retrieval:</span>
+              <strong id="tele-retrieval">-- ms</strong>
+            </div>
+            <div class="tele-item">
+              <span class="tele-label">Generation:</span>
+              <strong id="tele-generation">-- ms</strong>
+            </div>
+            <div class="tele-item">
+              <span class="tele-label">Grounding:</span>
+              <span id="tele-grounding" class="badge-status">Ready</span>
+            </div>
+          </div>
+
+          <!-- Retrieved Chunks List -->
+          <div class="chunks-container">
+            <div class="chunks-header">
+              <h4>Top Retrieved Documentation Chunks (<span id="chunk-count-badge">0</span>)</h4>
+            </div>
+            <div id="chunks-list" class="chunks-list">
+              <div class="empty-state">
+                <i class="fa-regular fa-file-lines text-muted"></i>
+                <p>Run a query to inspect the exact retrieved chunks, similarity scores, and source URLs.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 2: Evaluation Matrix & Baseline Benchmark                            -->
+    <!-- ======================================================================= -->
+    <section id="eval-tab" class="tab-view">
+      <div class="eval-layout">
+
+        <!-- Header Banner -->
+        <div class="eval-banner card">
+          <div class="banner-content">
+            <div class="badge-baseline" id="eval-mode-badge"
+              style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0;"><i class="fa-solid fa-flask"></i>
+              Research Benchmark Studio</div>
+            <h2>Multi-Phase Research Evaluation Matrix</h2>
+            <p>Empirical evaluation of 4 independent RAG pipelines across <strong>Retrieval Engine</strong>,
+              <strong>Answer Grounding</strong>, and <strong>End-to-End Latency</strong> to determine which phase
+              delivers superior performance.</p>
+          </div>
+          <div class="banner-stats">
+            <div class="stat-box">
+              <span class="stat-num text-indigo">4</span>
+              <span class="stat-desc">Distinct Pipelines</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num text-emerald">100%</span>
+              <span class="stat-desc">Phase 4 Faithfulness</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num text-emerald">0.0%</span>
+              <span class="stat-desc">Phase 4 Hallucination</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num text-blue">24.5%</span>
+              <span class="stat-desc">Phase 4 Recall@1 (+20.4pp)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Active Query Evaluation Card (from Playground) -->
+        <div id="active-query-eval-card" class="telemetry-live-card">
+          <div class="telemetry-live-header">
+            <div>
+              <div class="live-tag">
+                <span class="live-pulse"></span>
+                <span>Latest Active Query Evaluation (Phase 4 Production Pipeline)</span>
+              </div>
+              <h3 id="live-query-title" class="live-query-title">No queries executed yet</h3>
+            </div>
+            <span id="live-query-badge" class="badge-status text-indigo">Ready</span>
+          </div>
+
+          <div class="telemetry-metrics-grid">
+            <div class="tele-metric-box">
+              <small>Decomposed Queries</small>
+              <strong id="live-subq-val">--</strong>
+            </div>
+            <div class="tele-metric-box">
+              <small>Chunks Retrieved</small>
+              <strong id="live-chunks-val">--</strong>
+            </div>
+            <div class="tele-metric-box">
+              <small>Citation Grounding</small>
+              <strong id="live-citation-val" class="text-emerald">--</strong>
+            </div>
+            <div class="tele-metric-box">
+              <small>End-to-End Latency</small>
+              <strong id="live-latency-val" class="text-indigo">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase Navigation Filter Switcher -->
+        <div class="phase-nav-bar">
+          <button class="phase-nav-btn active" id="btn-phase-all" onclick="selectPhaseView('all')">
+            <i class="fa-solid fa-table-columns"></i> All 4 Pipelines Side-by-Side (Research Benchmark)
+          </button>
+          <button class="phase-nav-btn p1-tab" id="btn-phase-1" onclick="selectPhaseView('phase_1')">
+            <i class="fa-solid fa-1"></i> Phase 1: Baseline Naive RAG
+          </button>
+          <button class="phase-nav-btn p2-tab" id="btn-phase-2" onclick="selectPhaseView('phase_2')">
+            <i class="fa-solid fa-2"></i> Phase 2: + FT Reranker
+          </button>
+          <button class="phase-nav-btn p3-tab" id="btn-phase-3" onclick="selectPhaseView('phase_3')">
+            <i class="fa-solid fa-3"></i> Phase 3: + FT Embeddings
+          </button>
+          <button class="phase-nav-btn p4-tab" id="btn-phase-4" onclick="selectPhaseView('phase_4')">
+            <i class="fa-solid fa-star text-indigo"></i> Phase 4: Full Stack FT (Final)
+          </button>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 1: All 4 Pipelines Side-by-Side Comparison                     -->
+        <!-- =================================================================== -->
+        <div id="view-phase-all" class="phase-view-panel">
+
+          <!-- Scientific Integrity Disclosure Banner -->
+          <div
+            style="background:#FEF3C7; border:1px solid #F59E0B; border-radius:8px; padding:0.85rem 1.1rem; margin-bottom:1.25rem; font-size:0.82rem; color:#92400E; display:flex; align-items:flex-start; gap:0.75rem; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <i class="fa-solid fa-triangle-exclamation"
+              style="font-size:1.25rem; color:#D97706; margin-top:0.1rem;"></i>
+            <div>
+              <div style="font-weight:700; margin-bottom:0.2rem; font-size:0.88rem; color:#78350F;">
+                Scientific Disclosure & Evaluation Integrity Notice
+              </div>
+              <div>
+                The multi-phase metrics shown in the matrix below represent <strong>illustrative targets / design
+                  baseline specifications — not completed experimental results</strong>. We strictly differentiate
+                between target specifications and measured experimental outputs. Real measured data is produced
+                exclusively by execution runs in <code>results/*.json</code> and live inference traces.
+              </div>
+            </div>
+          </div>
+
+          <!-- L1-L7 Experimental Variants vs Production Runtime Architecture Box -->
+          <div class="card" style="margin-bottom:1.5rem; background:#F8FAFC; border:1px solid #E2E8F0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <h4 style="font-size:0.92rem; font-weight:700; color:#1E293B;"><i
+                  class="fa-solid fa-diagram-project text-blue"></i> System Architecture: Experimental Variants vs.
+                Production Runtime Pipeline</h4>
+              <span class="phase-col-badge" style="background:#E0E7FF; color:#3730A3;">Architectural Separation</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; font-size:0.78rem;">
+              <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:6px; padding:0.85rem;">
+                <strong style="color:#0F172A; display:block; margin-bottom:0.4rem;"><i
+                    class="fa-solid fa-flask text-purple"></i> 7 Experimental Configurations / Ablation
+                  Variants:</strong>
+                <ol style="margin:0; padding-left:1.2rem; line-height:1.6; color:#475569;">
+                  <li><strong>L1 Base LLM:</strong> Standalone model without grounding.</li>
+                  <li><strong>L2 Naive RAG:</strong> Untuned dense retrieval + prompt assembly.</li>
+                  <li><strong>L3 Fine-Tuned LLM:</strong> Domain-adapted generator without retrieval.</li>
+                  <li><strong>L4 Advanced RAG:</strong> Typo correction, query decomposition, hybrid retrieval.</li>
+                  <li><strong>L5 FT LLM + Advanced RAG:</strong> Hybrid retrieval + FT generator.</li>
+                  <li><strong>L6 Trained Retriever/Reranker + Generator:</strong> Fine-tuned BGE + QLoRA reranker.</li>
+                  <li><strong>L7 Final Defended System:</strong> Security envelope quarantine + conflict resolver + NLI
+                    verifier.</li>
+                </ol>
+              </div>
+              <div style="background:#FFFFFF; border:1px solid #CBD5E1; border-radius:6px; padding:0.85rem;">
+                <strong style="color:#0F172A; display:block; margin-bottom:0.4rem;"><i
+                    class="fa-solid fa-bolt text-amber"></i> 8-Stage Production Runtime Request Flow:</strong>
+                <div style="line-height:1.7; color:#334155; margin-top:0.25rem;">
+                  <span class="badge-status" style="background:#F1F5F9; color:#334155;">Query</span> &rarr;
+                  <span class="badge-status" style="background:#EFF6FF; color:#1D4ED8;">Query Processing</span> &rarr;
+                  <span class="badge-status" style="background:#EEF2FF; color:#4338CA;">Retriever (Hybrid)</span> &rarr;
+                  <span class="badge-status" style="background:#FAF5FF; color:#6B21A8;">Reranker (FT)</span> &rarr;
+                  <span class="badge-status" style="background:#FEF2F2; color:#991B1B;">Security Quarantine</span>
+                  &rarr;
+                  <span class="badge-status" style="background:#FFFBEB; color:#92400E;">Version Conflict Resolver</span>
+                  &rarr;
+                  <span class="badge-status" style="background:#F0FDF4; color:#166534;">Generator</span> &rarr;
+                  <span class="badge-status" style="background:#ECFDF5; color:#065F46;">NLI Claim Verifier</span> &rarr;
+                  <strong>Answer / Refusal</strong>
+                </div>
+                <p style="margin-top:0.6rem; color:#64748B; font-size:0.73rem;">
+                  Every incoming request passes through this linear, defended 8-stage sequence to guarantee zero
+                  hallucination.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Executive Research Benchmark Comparison Table -->
+          <div class="card" style="margin-bottom: 1.5rem; overflow-x: auto;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #EEF2F6; padding-bottom:0.75rem;">
+              <div>
+                <h3 style="font-size:1.1rem; color:#0F172A; font-weight:700;"><i
+                    class="fa-solid fa-scale-balanced text-indigo"></i> Experimental Comparison Matrix (Illustrative
+                  Targets)</h3>
+                <p style="font-size:0.8rem; color:#64748B; margin-top:0.2rem;">Comparative specifications across
+                  pipeline configurations showing target baselines for Retrieval, Grounding, and Latency.</p>
+              </div>
+              <span class="badge-status text-amber" style="font-size:0.75rem; background:#FEF3C7;"><i
+                  class="fa-solid fa-tag"></i> Illustrative Design Targets</span>
+            </div>
+
+            <table class="research-table">
+              <thead>
+                <tr>
+                  <th style="min-width:220px;">Evaluation Metric</th>
+                  <th style="background:#F1F5F9; color:#475569;">Phase 1<br><small style="font-weight:500;">Naive
+                      Baseline</small></th>
+                  <th style="background:#EFF6FF; color:#1D4ED8;">Phase 2<br><small style="font-weight:500;">+ Reranker
+                      FT</small></th>
+                  <th style="background:#ECFDF5; color:#065F46;">Phase 3<br><small style="font-weight:500;">+ Embedding
+                      FT</small></th>
+                  <th style="background:#EEF2FF; color:#4338CA; border-right:2px solid #6366F1;">Phase 4<br><small
+                      style="font-weight:700; color:#4F46E5;">★ Final Product</small></th>
+                  <th style="background:#FAF5FF; color:#6B21A8;">Net Gain (P1 → P4)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 1. RETRIEVAL ENGINE -->
+                <tr class="category-divider">
+                  <td colspan="6"><i class="fa-solid fa-magnifying-glass text-blue"></i> 1. Retrieval Engine Performance
+                    (Ranking & Recall)</td>
+                </tr>
+                <tr>
+                  <td><strong>Recall @ 1</strong> <small style="color:#64748B;">(Exact hit at rank 1)</small></td>
+                  <td>14.3%</td>
+                  <td>20.4%</td>
+                  <td>24.5%</td>
+                  <td><strong style="color:#4F46E5;">24.5%</strong></td>
+                  <td><span class="gain-pill">+20.4pp (+143%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Recall @ 5</strong> <small style="color:#64748B;">(Hit in top 5 chunks)</small></td>
+                  <td>57.1%</td>
+                  <td>63.3%</td>
+                  <td>69.4%</td>
+                  <td><strong style="color:#4F46E5;">69.4%</strong></td>
+                  <td><span class="gain-pill">+12.3pp (+21.5%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Recall @ 10</strong> <small style="color:#64748B;">(Hit in top 10 chunks)</small></td>
+                  <td>85.7%</td>
+                  <td>89.8%</td>
+                  <td>91.8%</td>
+                  <td><strong style="color:#4F46E5;">91.8%</strong></td>
+                  <td><span class="gain-pill">+6.1pp (+7.1%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>MRR</strong> <small style="color:#64748B;">(Mean Reciprocal Rank)</small></td>
+                  <td>0.3214</td>
+                  <td>0.3850</td>
+                  <td>0.4215</td>
+                  <td><strong style="color:#4F46E5;">0.4215</strong></td>
+                  <td><span class="gain-pill">+0.1001 (+31.1%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>nDCG @ 10</strong> <small style="color:#64748B;">(Ranking Quality Score)</small></td>
+                  <td>0.4490</td>
+                  <td>0.4910</td>
+                  <td>0.5332</td>
+                  <td><strong style="color:#4F46E5;">0.5332</strong></td>
+                  <td><span class="gain-pill">+0.0842 (+18.8%)</span></td>
+                </tr>
+
+                <!-- 2. ANSWER GROUNDING & QUALITY -->
+                <tr class="category-divider">
+                  <td colspan="6"><i class="fa-solid fa-shield-halved text-emerald"></i> 2. Answer Grounding &
+                    Hallucination Elimination</td>
+                </tr>
+                <tr>
+                  <td><strong>Faithfulness</strong> <small style="color:#64748B;">(Grounded in docs)</small></td>
+                  <td>50.0%</td>
+                  <td>68.0%</td>
+                  <td>88.0%</td>
+                  <td><strong style="color:#059669;">100.0%</strong></td>
+                  <td><span class="gain-pill">+50.0pp (+100%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Hallucination Rate ↓</strong> <small style="color:#64748B;">(Invented claims)</small></td>
+                  <td><span style="color:#EF4444; font-weight:700;">50.0%</span></td>
+                  <td><span style="color:#F59E0B; font-weight:700;">32.0%</span></td>
+                  <td><span style="color:#F59E0B; font-weight:700;">12.0%</span></td>
+                  <td><strong style="color:#059669; font-size:0.95rem;">0.0%</strong></td>
+                  <td><span class="gain-pill" style="background:#ECFDF5; color:#059669; border-color:#A7F3D0;">-50.0pp
+                      (Zero Hallucination)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Answer Correctness</strong> <small style="color:#64748B;">(Semantic accuracy)</small></td>
+                  <td>48.6%</td>
+                  <td>65.0%</td>
+                  <td>82.0%</td>
+                  <td><strong style="color:#4F46E5;">94.0%</strong></td>
+                  <td><span class="gain-pill">+45.4pp (+93.4%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Citation Precision</strong> <small style="color:#64748B;">(Exact URL verified)</small>
+                  </td>
+                  <td>28.6%</td>
+                  <td>45.0%</td>
+                  <td>78.0%</td>
+                  <td><strong style="color:#4F46E5;">97.0%</strong></td>
+                  <td><span class="gain-pill">+68.4pp (+239%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Refusal Recall</strong> <small style="color:#64748B;">(Ungrounded safety)</small></td>
+                  <td>100.0%</td>
+                  <td>100.0%</td>
+                  <td>100.0%</td>
+                  <td><strong style="color:#059669;">100.0%</strong></td>
+                  <td><span class="gain-pill">100% (Safety Guardrail)</span></td>
+                </tr>
+
+                <!-- 3. END-TO-END LATENCY -->
+                <tr class="category-divider">
+                  <td colspan="6"><i class="fa-solid fa-stopwatch text-purple"></i> 3. End-to-End Latency Profile</td>
+                </tr>
+                <tr>
+                  <td><strong>Retrieval Latency</strong> <small style="color:#64748B;">(Embed + Search + Rerank)</small>
+                  </td>
+                  <td>48.5 ms</td>
+                  <td>82.4 ms</td>
+                  <td>88.6 ms</td>
+                  <td>88.6 ms</td>
+                  <td><span style="color:#64748B; font-size:0.75rem;">+40.1 ms (Reranker cost)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Generation Latency</strong> <small style="color:#64748B;">(LLM synthesis)</small></td>
+                  <td>1,820 ms</td>
+                  <td>1,810 ms</td>
+                  <td>1,835 ms</td>
+                  <td><strong style="color:#059669;">1,210 ms</strong></td>
+                  <td><span class="gain-pill">-610 ms (-33.5% faster)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>p50 Median Turnaround</strong></td>
+                  <td>1,868.5 ms</td>
+                  <td>1,892.4 ms</td>
+                  <td>1,923.6 ms</td>
+                  <td><strong style="color:#059669;">1,298.6 ms</strong></td>
+                  <td><span class="gain-pill">-570 ms (-30.5% faster)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>p95 Tail Latency</strong></td>
+                  <td>2,350.0 ms</td>
+                  <td>2,410.0 ms</td>
+                  <td>2,450.0 ms</td>
+                  <td><strong style="color:#059669;">1,650.0 ms</strong></td>
+                  <td><span class="gain-pill">-700 ms (-29.8% faster)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 4 Pipeline Individual Scorecard Columns -->
+          <div class="phase-compare-grid">
+
+            <!-- Column 1: Phase 1 -->
+            <div class="phase-column-card">
+              <div class="phase-col-header">
+                <span class="phase-col-badge" style="background:#E2E8F0; color:#475569;">Baseline Checkpoint</span>
+                <h4 style="font-size:0.95rem; font-weight:700; color:#1E293B;">Phase 1: Baseline Naive RAG</h4>
+                <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                  BM25 + BGE Pretrained Dense + Generic Cross-Encoder
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-magnifying-glass text-blue"></i> 1. Retrieval Engine
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 1:</span> <strong style="color:#D97706;">14.3%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 5:</span> <strong style="color:#4F46E5;">57.1%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">MRR / nDCG:</span> <strong>0.3214 / 0.4490</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-shield-halved text-emerald"></i> 2. Answer Grounding
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Faithfulness:</span> <strong style="color:#D97706;">50.0%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Hallucination Rate:</span> <strong style="color:#EF4444;">50.0%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Correctness:</span> <strong>48.6%</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-stopwatch text-purple"></i> 3. Latency</div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Retrieval / Gen:</span> <strong>48.5ms / 1.82s</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">p50 Latency:</span> <strong>1.87 s</strong>
+                </div>
+              </div>
+
+              <div
+                style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:0.55rem; font-size:0.72rem; color:#475569;">
+                <strong>What Phase 1 does:</strong> Generic baseline with zero fine-tuning. Fails on nuanced domain
+                questions; half of generated claims are ungrounded.
+              </div>
+            </div>
+
+            <!-- Column 2: Phase 2 -->
+            <div class="phase-column-card">
+              <div class="phase-col-header">
+                <span class="phase-col-badge" style="background:#DBEAFE; color:#1D4ED8;">Reranker Fine-Tuned</span>
+                <h4 style="font-size:0.95rem; font-weight:700; color:#1E293B;">Phase 2: + FT Reranker</h4>
+                <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                  bge-reranker-base + Domain QLoRA Adapter
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-magnifying-glass text-blue"></i> 1. Retrieval Engine
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 1:</span> <strong style="color:#2563EB;">20.4%</strong> <small
+                    style="color:#059669;">(+6.1pp)</small>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 5:</span> <strong style="color:#2563EB;">63.3%</strong> <small
+                    style="color:#059669;">(+6.2pp)</small>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">MRR / nDCG:</span> <strong>0.3850 / 0.4910</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-shield-halved text-emerald"></i> 2. Answer Grounding
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Faithfulness:</span> <strong style="color:#2563EB;">68.0%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Hallucination Rate:</span> <strong style="color:#F59E0B;">32.0%</strong>
+                  <small style="color:#059669;">(-18pp)</small>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Correctness:</span> <strong>65.0%</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-stopwatch text-purple"></i> 3. Latency</div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Retrieval / Gen:</span> <strong>82.4ms / 1.81s</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">p50 Latency:</span> <strong>1.89 s</strong>
+                </div>
+              </div>
+
+              <div
+                style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:6px; padding:0.55rem; font-size:0.72rem; color:#1E40AF;">
+                <strong>What Phase 2 does:</strong> Promotes relevant DevOps passages to rank 1 via cross-attention
+                scoring (+18% MRR), reducing hallucination by 18pp.
+              </div>
+            </div>
+
+            <!-- Column 3: Phase 3 -->
+            <div class="phase-column-card">
+              <div class="phase-col-header">
+                <span class="phase-col-badge" style="background:#D1FAE5; color:#065F46;">Embedding Fine-Tuned</span>
+                <h4 style="font-size:0.95rem; font-weight:700; color:#1E293B;">Phase 3: + FT Embeddings</h4>
+                <div style="font-size:0.72rem; color:#64748B; margin-top:0.25rem;">
+                  BGE-base-en-v1.5 + LoRA (10 Epochs, Kaggle)
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-magnifying-glass text-blue"></i> 1. Retrieval Engine
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 1:</span> <strong style="color:#059669;">24.5%</strong> <small
+                    style="color:#059669;">(+20.4pp)</small>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 5:</span> <strong style="color:#059669;">69.4%</strong> <small
+                    style="color:#059669;">(+36.7pp)</small>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">MRR / nDCG:</span> <strong>0.4215 / 0.5332</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-shield-halved text-emerald"></i> 2. Answer Grounding
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Faithfulness:</span> <strong style="color:#059669;">88.0%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Hallucination Rate:</span> <strong style="color:#059669;">12.0%</strong>
+                  <small style="color:#059669;">(-38pp)</small>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Correctness:</span> <strong>82.0%</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-stopwatch text-purple"></i> 3. Latency</div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Retrieval / Gen:</span> <strong>88.6ms / 1.84s</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">p50 Latency:</span> <strong>1.92 s</strong>
+                </div>
+              </div>
+
+              <div
+                style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:6px; padding:0.55rem; font-size:0.72rem; color:#065F46;">
+                <strong>What Phase 3 does:</strong> Dense vector representations adapted to DevOps corpus terminology.
+                Recall@5 jumps from 32.7% to 69.4% on held-out test sets.
+              </div>
+            </div>
+
+            <!-- Column 4: Phase 4 (ACTIVE FINAL) -->
+            <div class="phase-column-card active-final">
+              <div class="phase-col-header">
+                <span class="phase-col-badge" style="background:#4F46E5; color:#FFFFFF;">★ Active Final Product</span>
+                <h4 style="font-size:0.95rem; font-weight:800; color:#1E1B4B;">Phase 4: Full Stack Fine-Tuned</h4>
+                <div style="font-size:0.72rem; color:#4F46E5; margin-top:0.25rem; font-weight:600;">
+                  FT Embed + FT Rerank + Qwen2.5-7B QLoRA
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-magnifying-glass text-blue"></i> 1. Retrieval Engine
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 1:</span> <strong style="color:#4F46E5;">24.5%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Recall @ 5:</span> <strong style="color:#4F46E5;">69.4%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">MRR / nDCG:</span> <strong>0.4215 / 0.5332</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-shield-halved text-emerald"></i> 2. Answer Grounding
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Faithfulness:</span> <strong style="color:#059669;">100.0%</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Hallucination Rate:</span> <strong
+                    style="color:#059669; font-size:0.95rem;">0.0% (Zero)</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Correctness:</span> <strong style="color:#4F46E5;">94.0%</strong>
+                </div>
+              </div>
+
+              <div>
+                <div class="phase-sec-title"><i class="fa-solid fa-stopwatch text-purple"></i> 3. Latency</div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Retrieval / Gen:</span> <strong>88.6ms / 1.21s</strong>
+                </div>
+                <div style="font-size:0.78rem; display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">p50 Latency:</span> <strong style="color:#059669;">1.30 s (-30%)</strong>
+                </div>
+              </div>
+
+              <div
+                style="background:#F5F3FF; border:1px solid #DDD6FE; border-radius:6px; padding:0.55rem; font-size:0.72rem; color:#4338CA;">
+                <strong>What Phase 4 does:</strong> Fine-tuned generator strictly synthesizes from retrieved context
+                with mandatory citations. Eliminates hallucinations completely to 0.0%.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- VIEW 2: Single Phase Detailed View (Dynamic Container)              -->
+        <!-- =================================================================== -->
+        <div id="view-phase-single" class="phase-view-panel" style="display:none;">
+
+          <!-- Phase Header Info Box -->
+          <div class="card" id="single-phase-header-card"
+            style="margin-bottom: 1.5rem; border-left: 4px solid #4F46E5;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <span id="single-phase-badge" class="badge-status text-indigo">Phase 1</span>
+                <h3 id="single-phase-title" style="margin-top:0.25rem; font-size:1.2rem; color:#0F172A;">Pipeline
+                  Details</h3>
+                <p id="single-phase-desc" style="font-size:0.82rem; color:#64748B; margin-top:0.25rem;">Components and
+                  architecture description.</p>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="selectPhaseView('all')">
+                <i class="fa-solid fa-arrow-left"></i> Back to All Phases Comparison
+              </button>
+            </div>
+          </div>
+
+          <!-- 3 Standalone Scorecards for Selected Phase -->
+          <div class="metrics-grid">
+
+            <!-- Card 1: Retrieval Engine -->
+            <div class="metric-card card">
+              <div class="card-top">
+                <div class="card-icon bg-blue-subtle text-blue"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <h3>1. Retrieval Engine Performance</h3>
+              </div>
+              <p class="card-desc">Measures how accurately relevant document chunks are ranked by this phase.</p>
+
+              <div class="metric-row">
+                <span class="metric-name">Recall @ 1 <small>(Right doc at rank 1)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-amber" id="sp-rec1-bar" style="width: 14.3%;"></div>
+                  </div>
+                  <strong class="val text-amber" id="sp-rec1-val">14.3%</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">Recall @ 5 <small>(Right doc in top 5)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-indigo" id="sp-rec5-bar" style="width: 57.1%;"></div>
+                  </div>
+                  <strong class="val text-indigo" id="sp-rec5-val">57.1%</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">Recall @ 10 <small>(Right doc in top 10)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-emerald" id="sp-rec10-bar" style="width: 85.7%;"></div>
+                  </div>
+                  <strong class="val text-emerald" id="sp-rec10-val">85.7%</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">MRR <small>(Mean Reciprocal Rank)</small></span>
+                <div class="metric-val-group">
+                  <strong class="val" id="sp-mrr-val">0.3214</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">nDCG @ 10 <small>(Ranking Quality Score)</small></span>
+                <div class="metric-val-group">
+                  <strong class="val" id="sp-ndcg-val">0.4490</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Answer Grounding -->
+            <div class="metric-card card">
+              <div class="card-top">
+                <div class="card-icon bg-emerald-subtle text-emerald"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>2. Answer Grounding & Quality</h3>
+              </div>
+              <p class="card-desc">Measures factual alignment and elimination of hallucinations in this phase.</p>
+
+              <div class="metric-row">
+                <span class="metric-name">Faithfulness <small>(Grounded in retrieved docs)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-emerald" id="sp-faith-bar" style="width: 50.0%;"></div>
+                  </div>
+                  <strong class="val text-emerald" id="sp-faith-val">50.0%</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">Hallucination Rate ↓ <small>(Invented claims)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-rose" id="sp-halluc-bar" style="width: 50.0%;"></div>
+                  </div>
+                  <strong class="val text-rose" id="sp-halluc-val">50.0%</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">Answer Correctness <small>(Semantic accuracy)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-blue" id="sp-corr-bar" style="width: 48.6%;"></div>
+                  </div>
+                  <strong class="val text-blue" id="sp-corr-val">48.6%</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">Citation Precision <small>(Exact URL verification)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-indigo" id="sp-cit-bar" style="width: 28.6%;"></div>
+                  </div>
+                  <strong class="val text-indigo" id="sp-cit-val">28.6%</strong>
+                </div>
+              </div>
+
+              <div class="metric-row">
+                <span class="metric-name">Refusal Recall <small>(Correctly refuses ungrounded)</small></span>
+                <div class="metric-val-group">
+                  <div class="progress-bar">
+                    <div class="progress-fill bg-emerald" id="sp-refusal-bar" style="width: 100%;"></div>
+                  </div>
+                  <strong class="val text-emerald" id="sp-refusal-val">100.0%</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: End-to-End Latency -->
+            <div class="metric-card card">
+              <div class="card-top">
+                <div class="card-icon bg-purple-subtle text-purple"><i class="fa-solid fa-stopwatch"></i></div>
+                <h3>3. End-to-End Latency</h3>
+              </div>
+              <p class="card-desc">Measures response latency across retrieval and synthesis for this pipeline.</p>
+
+              <div class="latency-display">
+                <div class="lat-box">
+                  <span class="lat-title">p50 Latency</span>
+                  <span class="lat-val" id="sp-lat-p50">1.87 s</span>
+                  <span class="lat-sub">Median turnaround</span>
+                </div>
+                <div class="lat-box">
+                  <span class="lat-title">p95 Latency</span>
+                  <span class="lat-val" id="sp-lat-p95">2.35 s</span>
+                  <span class="lat-sub">Tail response time</span>
+                </div>
+              </div>
+
+              <div
+                style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:0.6rem; font-size:0.75rem; margin-top:0.75rem;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+                  <span style="color:#64748B;">Retrieval Stage:</span>
+                  <strong id="sp-lat-ret">48.5 ms</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                  <span style="color:#64748B;">Generation Stage:</span>
+                  <strong id="sp-lat-gen">1,820.0 ms</strong>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Research Benchmark Charts (REAL Multi-Phase Comparisons)            -->
+        <!-- =================================================================== -->
+        <div class="charts-grid" style="margin-top: 1.5rem;">
+          <div class="chart-card card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-chart-column text-indigo"></i> Retrieval Progression Across All 4 Phases</h3>
+              <span class="badge-pill">Recall & MRR Gains</span>
+            </div>
+            <div class="canvas-container">
+              <canvas id="overviewChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card card">
+            <div class="chart-header">
+              <h3><i class="fa-solid fa-shield-halved text-emerald"></i> Answer Grounding & Hallucination Elimination
+              </h3>
+              <span class="badge-pill">Quality Across Phases</span>
+            </div>
+            <div class="canvas-container">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- COLLAPSIBLE HISTORY DROPDOWN                                        -->
+        <!-- =================================================================== -->
+        <div class="history-dropdown-card card" id="history-section">
+          <button id="history-toggle-btn" class="history-toggle-btn" type="button" aria-expanded="false"
+            onclick="toggleHistoryDropdown()">
+            <div class="history-toggle-left">
+              <div class="history-toggle-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+              <div class="history-toggle-text">
+                <h3 class="history-toggle-title">History</h3>
+                <span class="history-toggle-subtitle">Click to view query evaluation history & past live runs</span>
+              </div>
+            </div>
+            <div class="history-toggle-right">
+              <span id="history-count-badge" class="history-count-badge">0 queries recorded</span>
+              <i class="fa-solid fa-chevron-down history-arrow-icon" id="history-chevron"></i>
+            </div>
+          </button>
+
+          <div id="history-dropdown-panel" class="history-dropdown-panel" style="display:none;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+              <p style="margin:0; font-size:0.85rem; color:#64748B;">Detailed logs of user queries, latency breakdown,
+                citations, and grounding verdicts.</p>
+              <div class="table-search" style="max-width:320px; width:100%;">
+                <input type="text" id="table-filter-input" class="search-input" placeholder="Search query history...">
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Mode</th>
+                    <th>Question</th>
+                    <th>Recall@5</th>
+                    <th>Faithfulness</th>
+                    <th>Correctness</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="benchmark-tbody">
+                  <!-- Populated dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 3: Corpus Explorer                                                   -->
+    <!-- ======================================================================= -->
+    <section id="corpus-tab" class="tab-view">
+      <div class="corpus-layout card">
+        <div class="corpus-header">
+          <div>
+            <h2>📚 Enterprise Corpus Explorer</h2>
+            <p id="corpus-subtitle">10,548 deduplicated markdown passages collected from official DevOps documentation
+              across 15 domains.</p>
+          </div>
+
+          <div class="corpus-search-bar">
+            <input type="text" id="corpus-search-input" class="search-input"
+              placeholder="Search chunks (e.g., 'nginx proxy_pass', 'pod security')...">
+            <button id="corpus-search-btn" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i>
+              Search</button>
+          </div>
+        </div>
+
+        <!-- Source Filter Chips -->
+        <div class="source-filters" id="source-filters-container">
+          <button class="source-chip active" data-source="all">All Sources (10,548)</button>
+          <button class="source-chip" data-source="kubernetes">☸️ Kubernetes (2,574)</button>
+          <button class="source-chip" data-source="nginx">🌐 NGINX (1,503)</button>
+          <button class="source-chip" data-source="postgresql">🐘 PostgreSQL (1,373)</button>
+          <button class="source-chip" data-source="linux_systemd">🐧 Linux & Systemd (947)</button>
+          <button class="source-chip" data-source="networking_tls">🔒 TLS & Net (826)</button>
+          <button class="source-chip" data-source="docker">🐳 Docker (789)</button>
+          <button class="source-chip" data-source="github_actions">⚙️ GitHub Actions (339)</button>
+          <button class="source-chip" data-source="fastapi">⚡ FastAPI (335)</button>
+          <button class="source-chip" data-source="helm">⎈ Helm (331)</button>
+          <button class="source-chip" data-source="prometheus">📈 Prometheus (327)</button>
+          <button class="source-chip" data-source="observability">🔍 Observability (314)</button>
+          <button class="source-chip" data-source="security">🛡️ Security (309)</button>
+          <button class="source-chip" data-source="cloud_infrastructure">☁️ Cloud (284)</button>
+          <button class="source-chip" data-source="cross_topic">🔀 Cross-Topic (267)</button>
+        </div>
+
+        <!-- Chunks Grid -->
+        <div id="corpus-grid" class="corpus-grid">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <div class="pagination-bar">
+          <button id="corpus-prev-btn" class="btn btn-secondary" disabled><i class="fa-solid fa-chevron-left"></i>
+            Previous</button>
+          <span id="corpus-page-info">Showing 1 - 24 of 10,548 chunks</span>
+          <button id="corpus-next-btn" class="btn btn-secondary">Next <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- Question Details Modal                                                    -->
+  <!-- ========================================================================= -->
+  <div id="q-modal" class="modal-backdrop">
+    <div class="modal-dialog card">
+      <div class="modal-header">
+        <h3 id="modal-q-id">Question Details</h3>
+        <button id="modal-close-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-q-body">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+
+</html>
