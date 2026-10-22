@@ -102,6 +102,28 @@ class AdvancedRAGPipeline:
         process = psutil.Process(os.getpid())
         t_total_start = time.perf_counter()
 
+        # Stage 0: Security Defense Guardrail Scan (OWASP LLM01 / LLM02)
+        is_adversarial, matched_patterns, guardrail_msg = self.defense_pipeline.scan_query(question)
+        if is_adversarial:
+            total_ms = (time.perf_counter() - t_total_start) * 1000
+            ram_mb = process.memory_info().rss / (1024 * 1024)
+            return RAGResult(
+                question=question,
+                answer=guardrail_msg,
+                retrieved_chunk_ids=[],
+                reranked_chunk_ids=[],
+                retrieved_texts=[],
+                retrieved_urls=[],
+                retrieval_scores=[],
+                citations=[],
+                is_refusal=True,
+                retrieval_latency_ms=0.0,
+                rerank_latency_ms=0.0,
+                generation_latency_ms=0.0,
+                total_latency_ms=total_ms,
+                ram_mb_at_query=ram_mb,
+            )
+
         # Stages 1-4: Advanced Hybrid Retrieval & Reranking
         t0 = time.perf_counter()
         retrieval_res, sub_queries = self.retriever.retrieve(
@@ -118,9 +140,14 @@ class AdvancedRAGPipeline:
         if self.defense_pipeline.should_fail_closed(safe_chunks, defense_summary):
             total_ms = (time.perf_counter() - t_total_start) * 1000
             ram_mb = process.memory_info().rss / (1024 * 1024)
-            refusal_reason = "I cannot find sufficient information in the provided documentation to answer this question."
-            if defense_summary.get("quarantined", 0) > 0:
-                refusal_reason = "The request or retrieved evidence was quarantined due to potential adversarial injection content."
+            is_quarantined = defense_summary.get("quarantined", 0) > 0
+            if is_quarantined:
+                refusal_reason = (
+                    "🛡️ **Security Guardrail Active**: The retrieved content was quarantined by the Defense Pipeline "
+                    "due to potential prompt injection or adversarial content. System integrity has been maintained."
+                )
+            else:
+                refusal_reason = "I cannot find sufficient information in the provided documentation to answer this question."
             return RAGResult(
                 question=question,
                 answer=refusal_reason,
@@ -203,16 +230,23 @@ class AdvancedRAGPipeline:
         dense = DenseRetriever.load(
             index_dir,
             model_name=emb_cfg["model_name"],
+            adapter_path=emb_cfg.get("adapter_path", None),
             device=emb_cfg.get("device", "cpu"),
         )
 
         reranker = Reranker(
             model_name=rer_cfg["model_name"],
+            adapter_path=rer_cfg.get("adapter_path", None),
             device=rer_cfg.get("device", "cpu"),
             batch_size=rer_cfg.get("batch_size", 16),
         )
 
-        groq = GroqClient()
+        provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+        if provider == "ollama":
+            from src.generation.ollama_client import OllamaClient
+            groq = OllamaClient()
+        else:
+            groq = GroqClient()
 
         return cls(
             bm25=bm25,

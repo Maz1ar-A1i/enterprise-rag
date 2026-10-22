@@ -20,26 +20,58 @@ from dataclasses import dataclass, field
 
 log = logging.getLogger(__name__)
 
-# Known prompt injection & adversarial trigger patterns
+# Known prompt injection, adversarial triggers, and credential exfiltration patterns (OWASP LLM01/LLM02)
 PROMPT_INJECTION_PATTERNS = [
-    r"ignore\s+(all\s+)?(previous|above|prior)\s+(instructions|prompts|directions)",
-    r"disregard\s+(all\s+)?(previous|above|prior)\s+(instructions|prompts)",
+    # 1. Directive overrides & instruction hijacking
+    r"ignore\s+(all\s+)?(previous|above|prior|system)\s+(instructions|prompts|directions|rules|constraints)",
+    r"disregard\s+(all\s+)?(previous|above|prior|system)\s+(instructions|prompts|directions|rules|constraints)",
+    r"forget\s+(all\s+)?(previous|prior|system)\s+(instructions|prompts|rules)",
+    r"override\s+(all\s+)?(system|instructions|prompts|rules|constraints|filters|guardrails)",
     r"system\s*override",
-    r"you\s+are\s+now\s+(a|an|unrestricted|in\s+developer\s+mode)",
-    r"developer\s+mode\s+enabled",
+    
+    # 2. Persona hijacking & jailbreak triggers
+    r"you\s+are\s+now\s+(a|an|unrestricted|in\s+developer\s+mode|dan|evil|unfiltered|jailbroken)",
+    r"act\s+as\s+(an?\s+)?(unrestricted|jailbroken|evil|unfiltered|dan|system\s+administrator)",
+    r"developer\s+mode(\s+enabled|\s+on)?",
     r"jailbreak",
     r"do\s+anything\s+now",
-    r"exfiltrate\s+",
-    r"output\s+the\s+(system\s+prompt|developer\s+instructions|hidden\s+key)",
-    r"reveal\s+your\s+(instructions|rules|system\s+prompt)",
+    r"bypass\s+(safety|guardrails?|filters?|rules?|constraints?|authentication|security)",
+    r"disable\s+(safety|guardrails?|filters?|security|defense)",
+    
+    # 3. System prompt & instruction exfiltration
+    r"(reveal|output|display|show|print|dump|echo|repeat|leak)\s+(all\s+)?(the\s+)?(system\s+prompt|system\s+instructions|developer\s+instructions|developer\s+prompts|core\s+prompts|initial\s+prompt|hidden\s+instructions)",
+    r"reveal\s+your\s+(instructions|rules|system\s+prompt|guidelines|constraints)",
+    r"what\s+(is|are)\s+your\s+(system\s+prompt|system\s+instructions|initial\s+instructions|hidden\s+prompt)",
+    r"repeat\s+everything\s+(above|before|preceding)",
+    
+    # 4. Secret, token, credential exfiltration & unauthorized penetration (OWASP LLM02)
+    r"(output|display|show|print|dump|leak|exfiltrate|reveal)\s+(all\s+)?(the\s+)?(internal\s+)?(api\s*keys?|env(ironment)?\s+variables?|secrets?|tokens?|passwords?|credentials?)",
+    r"exfiltrat(e|ion)",
+    r"(internal\s+)?api\s*keys?\s+and\s+environment\s+variables?",
+    r"\.env\s+(file|variables|keys)",
+    r"(root|database|admin)\s+password",
+    r"private\s+(api\s+token|secret\s+key|encryption\s+key|credentials?)",
+    r"(unauthorized|exploit|backdoor)\s+(root\s+access|remote\s+access|penetration)",
+    
+    # 5. Tokenizer & delimiter injection mimics
     r"<\s*script[^>]*>",
     r"\[SYSTEM_PROMPT\]",
     r"\[ADMIN_INSTRUCTION\]",
-    r"bypass\s+(safety|guardrails|filters)"
+    r"\[SYSTEM_OVERRIDE\]",
+    r"<\|im_start\|>",
+    r"<\|im_end\|>",
+    r"\[INST\]",
+    r"\[/INST\]"
 ]
 
 # Compiled regexes for fast execution
 _INJECTION_REGEXES = [re.compile(p, re.IGNORECASE) for p in PROMPT_INJECTION_PATTERNS]
+
+SECURITY_GUARDRAIL_REFUSAL = (
+    "🛡️ **Security Guardrail Active**: The request was quarantined by the Defense Pipeline "
+    "due to potential prompt injection, adversarial trigger patterns, or system override attempt. "
+    "System instructions, API keys, and internal environment configurations are strictly isolated and cannot be accessed or disclosed."
+)
 
 
 @dataclass
@@ -67,15 +99,18 @@ class SourceTrustRegistry:
     Tracks document provenance and authority tiers.
     """
     DEFAULT_TRUST_MAP = {
-        "docs.docker.com": SourceTrustRecord("docs.docker.com", "authoritative", 1.0),
-        "kubernetes.io": SourceTrustRecord("kubernetes.io", "authoritative", 1.0),
-        "nginx.org": SourceTrustRecord("nginx.org", "authoritative", 1.0),
-        "postgresql.org": SourceTrustRecord("postgresql.org", "authoritative", 1.0),
-        "docs.helm.sh": SourceTrustRecord("docs.helm.sh", "authoritative", 1.0),
-        "prometheus.io": SourceTrustRecord("prometheus.io", "authoritative", 1.0),
-        "docs.github.com": SourceTrustRecord("docs.github.com", "authoritative", 1.0),
-        "systemd.io": SourceTrustRecord("systemd.io", "authoritative", 1.0),
-        "datatracker.ietf.org": SourceTrustRecord("datatracker.ietf.org", "authoritative", 1.0),
+        "confluence": SourceTrustRecord("confluence", "authoritative", 1.0),
+        "atlassian": SourceTrustRecord("atlassian", "authoritative", 1.0),
+        "jira": SourceTrustRecord("jira", "authoritative", 1.0),
+        "linear": SourceTrustRecord("linear.app", "authoritative", 1.0),
+        "github": SourceTrustRecord("github.com", "authoritative", 1.0),
+        "slack": SourceTrustRecord("slack.com", "internal_trusted", 0.95),
+        "google_drive": SourceTrustRecord("drive.google.com", "authoritative", 1.0),
+        "drive.google": SourceTrustRecord("drive.google.com", "authoritative", 1.0),
+        "gmail": SourceTrustRecord("workspace.google.com", "internal_trusted", 0.95),
+        "hubspot": SourceTrustRecord("hubspot.com", "authoritative", 1.0),
+        "fireflies": SourceTrustRecord("fireflies.ai", "internal_trusted", 0.90),
+        "enterprise-rag-dataset": SourceTrustRecord("enterprise-rag-dataset", "internal_trusted", 0.95),
         "internal_enterprise": SourceTrustRecord("internal_enterprise", "internal_trusted", 0.95),
         "community_docs": SourceTrustRecord("community_docs", "community", 0.70),
         "untrusted_web": SourceTrustRecord("untrusted_web", "untrusted", 0.20),
@@ -212,6 +247,40 @@ class SecurityDefensePipeline:
 
         return safe_chunks, assessments, defense_summary
 
+    def scan_query(self, query: str) -> Tuple[bool, List[str], str]:
+        """
+        Scans an incoming user query for adversarial prompt injection,
+        jailbreak attempts, system override instructions, and credential exfiltration.
+        
+        Returns:
+            (is_adversarial, matched_patterns, refusal_message)
+        """
+        is_suspicious, matched = self.quarantine.scan_chunk("user_query", query)
+        if is_suspicious:
+            log.warning(f"[SECURITY DEFENSE] Adversarial query blocked: {matched} | Query: {query[:120]}")
+            return True, matched, SECURITY_GUARDRAIL_REFUSAL
+        return False, [], ""
+
+    def scan_output(self, output_text: str) -> Tuple[bool, str]:
+        """
+        Defense-in-depth output guardrail:
+        Verifies that generated text does not reflect adversarial overrides or exfiltrate credentials.
+        """
+        if not output_text:
+            return False, output_text
+        
+        leak_patterns = [
+            r"system\s*override\s*(successful|complete)",
+            r"gsk_[a-zA-Z0-9]{20,}",
+            r"sk-[a-zA-Z0-9]{20,}",
+            r"(GROQ_API_KEY|OPENAI_API_KEY|DATABASE_URL)\s*=",
+        ]
+        for lp in leak_patterns:
+            if re.search(lp, output_text, re.IGNORECASE):
+                log.error(f"[SECURITY DEFENSE] Output leak detected: {lp}")
+                return True, SECURITY_GUARDRAIL_REFUSAL
+        return False, output_text
+
     @staticmethod
     def should_fail_closed(safe_chunks: List[Any], defense_summary: Dict[str, Any]) -> bool:
         """
@@ -219,6 +288,9 @@ class SecurityDefensePipeline:
         """
         if defense_summary.get("fail_closed_required", False):
             return True
+        if defense_summary.get("quarantined", 0) > 0:
+            return True
         if not safe_chunks:
             return True
         return False
+

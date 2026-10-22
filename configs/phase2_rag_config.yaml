@@ -1,6 +1,6 @@
 paths:
-  seed_corpus:      domain_trained_enterprise_corpus/domain_trained_enterprise_corpus/section_records.jsonl
-  corpus_raw:       corpus/raw
+  seed_corpus:      null
+  corpus_raw:       enterprise-rag-dataset
   corpus_processed: corpus/processed
   indexes:          indexes
   benchmark:        datasets/benchmark
@@ -21,8 +21,8 @@ embedding:
   device: cpu
 reranker:
   model_name: BAAI/bge-reranker-base
-  adapter_path: reranker_phase2/adapter
-  top_k_input: 50
+  adapter_path: reranker_adapter
+  top_k_input: 15
   top_k_output: 5
   batch_size: 16
   device: cpu
@@ -34,10 +34,10 @@ hybrid:
   rrf_k: 60
   top_k: 50
 generation:
-  model: openai/gpt-oss-120b
+  model: qwen2.5vl:3b
   temperature: 0.1
-  max_tokens: 3000
-  context_token_budget: 5000
+  max_tokens: 1024
+  context_token_budget: 4000
   rate_limit_rpm: 28
 evaluation:
   judge_model: openai/gpt-oss-20b
@@ -52,11 +52,13 @@ benchmark:
   visible_file: datasets/benchmark/questions_visible.jsonl
   hidden_file: datasets/benchmark/questions_hidden.jsonl
   categories:
-    - direct
-    - multi_hop
-    - troubleshooting
-    - cross_document
-    - version_sensitive
-    - ambiguous
-    - unanswerable
-    - distractor_heavy
+    - basic
+    - semantic
+    - intra_document_reasoning
+    - project_related
+    - constrained
+    - conflicting_info
+    - completeness
+    - miscellaneous
+    - info_not_found
+    - high_level

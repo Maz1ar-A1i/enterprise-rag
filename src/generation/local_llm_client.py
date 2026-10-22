@@ -1,9 +1,9 @@
 """
 src/generation/local_llm_client.py
 ===================================
-Phase 4 Local LLM Generator — Qwen2.5-7B-Instruct + QLoRA Adapter.
+Phase 4 Local LLM Generator — Qwen2.5-3B-Instruct + QLoRA Adapter.
 
-Wraps the fine-tuned Phase 4 model (40MB LoRA adapter on Qwen2.5-7B-Instruct)
+Wraps the fine-tuned Phase 4 model (40MB LoRA adapter on Qwen2.5-3B-Instruct)
 so it can be used as a drop-in replacement for GroqClient in the RAG pipeline.
 
 Key behaviors:
@@ -25,64 +25,55 @@ import logging
 import time
 from pathlib import Path
 from typing import Optional
+from dotenv import load_dotenv
 
+load_dotenv()
 log = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 # ── Adapter path (Phase 4 fine-tuned LoRA) ──────────────────────────────────
 PHASE4_ADAPTER_PATH = PROJECT_ROOT / "phase4_llm_adapter"
-BASE_MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
+BASE_MODEL_NAME = "Qwen/Qwen2.5-3B-Instruct"
 
-# ── Common typo corrections for DevOps queries ───────────────────────────────
+# ── Common typo corrections for enterprise workplace queries ─────────────────
 _TYPO_MAP = {
-    r"\bdocker comose\b": "docker compose",
-    r"\bdocker compse\b": "docker compose",
-    r"\bkubernettes\b": "kubernetes",
-    r"\bkuberentes\b": "kubernetes",
-    r"\bkubernets\b": "kubernetes",
-    r"\bk8\b": "kubernetes",
-    r"\bnginix\b": "nginx",
-    r"\bnginex\b": "nginx",
-    r"\bpostgress\b": "postgresql",
-    r"\bpostgresql\b": "postgresql",
-    r"\bpostgres\b": "postgresql",
-    r"\bgithub action\b": "github actions",
-    r"\bfastap\b": "fastapi",
-    r"\bprometheuss\b": "prometheus",
-    r"\bhelms\b": "helm",
-    r"\bdeamonset\b": "daemonset",
-    r"\bdamonset\b": "daemonset",
-    r"\bserviceaccout\b": "serviceaccount",
-    r"\bserviceacount\b": "serviceaccount",
-    r"\bconfig map\b": "configmap",
-    r"\bconfigmaps\b": "configmap",
-    r"\bpersistant\b": "persistent",
-    r"\bperstent\b": "persistent",
-    r"\bdeplomyent\b": "deployment",
-    r"\bdeplomyents\b": "deployments",
-    r"\bstatefulsets\b": "statefulset",
-    r"\bdaemonsets\b": "daemonset",
-    r"\bingresess\b": "ingress",
-    r"\bingresses\b": "ingress",
-    r"\bcontaner\b": "container",
-    r"\bcontaners\b": "containers",
-    r"\bimge\b": "image",
-    r"\bvolume mounts\b": "volumeMounts",
-    r"\benviroment\b": "environment",
-    r"\benviornment\b": "environment",
-    r"\bauthentificate\b": "authenticate",
+    r"\bslac\b": "slack",
+    r"\bslak\b": "slack",
+    r"\bjria\b": "jira",
+    r"\bconfluece\b": "confluence",
+    r"\bconflunce\b": "confluence",
+    r"\bgithb\b": "github",
+    r"\blineer\b": "linear",
+    r"\bliner\b": "linear",
+    r"\bhubspt\b": "hubspot",
+    r"\bgmal\b": "gmail",
+    r"\bgmial\b": "gmail",
+    r"\bfirelies\b": "fireflies",
+    r"\btrasncript\b": "transcript",
+    r"\bpostmorten\b": "postmortem",
+    r"\bescalaton\b": "escalation",
+    r"\broolback\b": "rollback",
+    r"\brollbak\b": "rollback",
+    r"\bauthetication\b": "authentication",
+    r"\bauthentification\b": "authentication",
     r"\bauthorisation\b": "authorization",
-    r"\brbac role\b": "RBAC role",
-    r"\btls certficate\b": "TLS certificate",
-    r"\bcertifacte\b": "certificate",
+    r"\bentitlement\b": "entitlement",
+    r"\bonbording\b": "onboarding",
+    r"\boffbording\b": "offboarding",
+    r"\bcontarctor\b": "contractor",
+    r"\bmilesstone\b": "milestone",
+    r"\bsprints\b": "sprint",
+    r"\bworkfow\b": "workflow",
+    r"\bintegraton\b": "integration",
+    r"\bfailour\b": "failover",
 }
 
 _COMPILED_TYPOS = [(re.compile(pat, re.IGNORECASE), fix) for pat, fix in _TYPO_MAP.items()]
 
 
 def correct_typos(text: str) -> str:
-    """Apply lightweight DevOps domain typo correction to query text."""
+    """Apply lightweight enterprise workplace domain typo correction to query text."""
     for pattern, fix in _COMPILED_TYPOS:
         text = pattern.sub(fix, text)
     return text
@@ -90,7 +81,7 @@ def correct_typos(text: str) -> str:
 
 class LocalLLMClient:
     """
-    Phase 4 generator: loads fine-tuned Qwen2.5-7B + LoRA adapter locally.
+    Phase 4 generator: loads fine-tuned Qwen2.5-3B + LoRA adapter locally.
 
     Falls back gracefully:
       1. Try: 4-bit NF4 quantized (requires bitsandbytes + CUDA)
@@ -186,10 +177,26 @@ class LocalLLMClient:
         user_message = correct_typos(user_message)
 
         if not self._loaded or self._model is None:
-            # High-speed Phase 4 pipeline with strict zero-hallucination grounding
+            # Check if Ollama is running locally first
+            try:
+                from src.generation.ollama_client import OllamaClient
+                ollama = OllamaClient()
+                if ollama.is_available():
+                    ollama_model = os.getenv("OLLAMA_MODEL", "qwen2.5vl:3b")
+                    return ollama.call(
+                        system_prompt=system_prompt,
+                        user_message=user_message,
+                        model=ollama_model,
+                        temperature=temperature,
+                        max_tokens=max_tokens,
+                    )
+            except Exception as e:
+                log.warning(f"[Phase4 LLM] Ollama call failed ({e}), falling back to Groq.")
+
+            # Cloud fallback if Ollama is unavailable
             from src.generation.groq_client import GroqClient
             groq = GroqClient()
-            model_name = os.getenv("GROQ_GENERATE_MODEL", "openai/gpt-oss-120b")
+            model_name = os.getenv("GROQ_GENERATE_MODEL", "openai/gpt-oss-20b")
             return groq.call(
                 system_prompt=system_prompt,
                 user_message=user_message,
@@ -253,7 +260,7 @@ class LocalLLMClient:
     def _stub_response(self, user_message: str) -> str:
         """Informative stub when model is not loaded."""
         return (
-            "⚠️ **Phase 4 LLM not loaded** — the fine-tuned Qwen2.5-7B adapter "
+            "⚠️ **Phase 4 LLM not loaded** — the fine-tuned Qwen2.5-3B adapter "
             f"(`phase4_llm_adapter/`) is present but the model requires GPU + "
             "`transformers`, `peft`, and `bitsandbytes` to run locally. "
             "Please run: `pip install transformers peft bitsandbytes accelerate` "

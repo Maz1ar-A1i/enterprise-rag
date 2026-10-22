@@ -83,7 +83,37 @@ class BM25Retriever:
 
         tokenized = [_tokenize(c.text) for c in tqdm(chunks, desc="[BM25] Tokenizing")]
         self.bm25 = BM25Okapi(tokenized)
+        self._tokenized_corpus = tokenized
         print("[BM25] Index built.")
+
+    def add_chunks(self, new_chunks: List[Chunk]) -> int:
+        """
+        Incrementally append new chunks to the existing BM25 index.
+
+        Args:
+            new_chunks: List of new Chunk objects to add.
+
+        Returns:
+            Number of chunks successfully added.
+        """
+        if self.bm25 is None:
+            raise RuntimeError("BM25 index not built or loaded. Call build() or load() first.")
+        if not new_chunks:
+            return 0
+
+        # Tokenize only new chunks
+        new_tokens = [_tokenize(c.text) for c in new_chunks]
+
+        # Reconstruct corpus list if not cached in memory
+        if not hasattr(self, "_tokenized_corpus") or self._tokenized_corpus is None:
+            self._tokenized_corpus = [_tokenize(c.text) for c in self.chunks]
+
+        self._tokenized_corpus.extend(new_tokens)
+        self.chunks.extend(new_chunks)
+        self._chunk_id_to_idx = {c.chunk_id: i for i, c in enumerate(self.chunks)}
+        self.bm25 = BM25Okapi(self._tokenized_corpus)
+        print(f"[BM25] Incrementally added {len(new_chunks):,} chunks. Total BM25 docs: {len(self.chunks):,}")
+        return len(new_chunks)
 
     # ── Retrieval ──────────────────────────────────────────────────────────
 

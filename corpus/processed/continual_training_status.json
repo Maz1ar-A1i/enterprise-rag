@@ -1,0 +1,25 @@
+{
+  "status": "completed",
+  "progress": 100.0,
+  "epoch": 1,
+  "total_epochs": 1,
+  "current_step": 3,
+  "total_steps": 3,
+  "loss": 0.06131,
+  "message": "Fine-tuning completed in 19.0s (Final Loss: 0.0613). Ready to hot-reload.",
+  "error": null,
+  "logs": [
+    "[13:02:37] Initialized CPU worker with 12 OpenMP threads. Reserved cores for live web queries.",
+    "[13:02:37] Loading active model weights from D:\\Project 3\\embedding_adapter...",
+    "[13:02:37] Loaded SentenceTransformer (10 total training samples including replay anchors).",
+    "[13:02:37] Starting training: 1 epoch(s), 3 batches/epoch, batch_size=4.",
+    "[13:02:44] Epoch 1/1 | Batch 1/3 | Step 1/3 | Loss: 0.3029",
+    "[13:02:47] Epoch 1/1 | Batch 2/3 | Step 2/3 | Loss: 0.5208",
+    "[13:02:51] Epoch 1/1 | Batch 3/3 | Step 3/3 | Loss: 0.0613",
+    "[13:02:51] Training loop complete. Saving checkpoint to staging directory...",
+    "[13:02:51] Running probe vector validation...",
+    "[13:02:52] Validated 768-dim embeddings. Creating backup and deploying new adapter...",
+    "[13:02:56] [SUCCESS] Fine-tuning finished in 19.0s! Adapter deployed. Ready for hot-reload."
+  ],
+  "timestamp": "2026-10-22T13:02:56"
+}

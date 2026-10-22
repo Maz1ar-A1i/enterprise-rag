@@ -26,6 +26,16 @@ log = logging.getLogger(__name__)
 # GROUP 1 — RETRIEVAL METRICS
 # ============================================================================
 
+def _matches_relevant(retrieved_id: str, relevant: set) -> bool:
+    if retrieved_id in relevant:
+        return True
+    if "_" in retrieved_id:
+        base_id = retrieved_id.rsplit("_", 1)[0]
+        if base_id in relevant:
+            return True
+    return False
+
+
 def recall_at_k(
     retrieved_ids: List[str],
     relevant_ids: List[str],
@@ -46,9 +56,16 @@ def recall_at_k(
     """
     if not relevant_ids:
         return 0.0
-    top_k   = set(retrieved_ids[:k])
     relevant = set(relevant_ids)
-    return len(top_k & relevant) / len(relevant)
+    matched = set()
+    for doc_id in retrieved_ids[:k]:
+        if doc_id in relevant:
+            matched.add(doc_id)
+        elif "_" in doc_id:
+            base_id = doc_id.rsplit("_", 1)[0]
+            if base_id in relevant:
+                matched.add(base_id)
+    return len(matched) / len(relevant)
 
 
 def mean_reciprocal_rank(
@@ -65,7 +82,7 @@ def mean_reciprocal_rank(
     """
     relevant = set(relevant_ids)
     for rank, doc_id in enumerate(retrieved_ids, start=1):
-        if doc_id in relevant:
+        if _matches_relevant(doc_id, relevant):
             return 1.0 / rank
     return 0.0
 
@@ -99,7 +116,7 @@ def ndcg_at_k(
     dcg = sum(
         1.0 / math.log2(rank + 1)
         for rank, doc_id in enumerate(top_k, start=1)
-        if doc_id in relevant
+        if _matches_relevant(doc_id, relevant)
     )
 
     # Ideal DCG: all relevant documents at the top positions

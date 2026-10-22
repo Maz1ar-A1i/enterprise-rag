@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0, r'd:\Project 3')
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
 
 errors = []
 

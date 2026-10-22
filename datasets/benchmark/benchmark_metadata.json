@@ -1,18 +1,19 @@
 {
-  "total": 1000,
-  "visible_count": 700,
-  "hidden_count": 300,
-  "by_category": {
-    "version_sensitive": 100,
-    "multi_hop": 150,
-    "ambiguous": 50,
-    "unanswerable": 50,
-    "direct": 300,
-    "troubleshooting": 200,
-    "cross_document": 100,
-    "distractor_heavy": 50
+  "total_questions": 500,
+  "visible_questions": 400,
+  "hidden_questions": 100,
+  "categories": {
+    "basic": 175,
+    "semantic": 125,
+    "intra_document_reasoning": 40,
+    "project_related": 40,
+    "constrained": 30,
+    "conflicting_info": 20,
+    "completeness": 20,
+    "miscellaneous": 20,
+    "high_level": 10,
+    "info_not_found": 20
   },
-  "created_at": "2026-10-05",
-  "seed": 42,
-  "note": "questions_hidden.jsonl is the mentor-held hidden evaluation set."
+  "source": "EnterpriseRAG-Bench (Onyx)",
+  "dataset_name": "Redwood Inference"
 }

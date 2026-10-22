@@ -27,6 +27,7 @@ PHASE_CONFIGS = {
     1: "configs/naive_rag_config.yaml",
     2: "configs/phase2_rag_config.yaml",
     3: "configs/phase3_rag_config.yaml",
+    4: "configs/phase4_rag_config.yaml",
 }
 
 class PhasePipelineFactory:

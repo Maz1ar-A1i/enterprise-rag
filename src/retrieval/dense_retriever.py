@@ -72,17 +72,28 @@ class DenseRetriever:
         import torch
 
         if self.adapter_path and Path(self.adapter_path).exists():
-            print(f"[Dense] Loading Phase 3 Fine-Tuned Embedding Adapter: {self.adapter_path}")
-            from transformers import AutoTokenizer, AutoModel
-            from peft import PeftModel
+            adapter_dir = Path(self.adapter_path)
+            if (adapter_dir / "adapter_config.json").exists():
+                print(f"[Dense] Loading Phase 3 Fine-Tuned Embedding LoRA Adapter: {self.adapter_path}")
+                from transformers import AutoTokenizer, AutoModel
+                from peft import PeftModel
 
-            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-            base_model = AutoModel.from_pretrained(self.model_name)
-            self.model = PeftModel.from_pretrained(base_model, str(self.adapter_path))
-            self.model.to(self.device)
-            self.model.eval()
-            self._is_peft = True
-            print("[Dense] Phase 3 Embedding LoRA Adapter attached.")
+                self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+                base_model = AutoModel.from_pretrained(self.model_name)
+                self.model = PeftModel.from_pretrained(base_model, str(self.adapter_path))
+                self.model.to(self.device)
+                self.model.eval()
+                self._is_peft = True
+                print("[Dense] Phase 3 Embedding LoRA Adapter attached.")
+            else:
+                print(f"[Dense] Loading Phase 3 Fine-Tuned SentenceTransformer: {self.adapter_path}")
+                from sentence_transformers import SentenceTransformer
+                num_threads = min(8, os.cpu_count() or 4)
+                torch.set_num_threads(num_threads)
+                self.model = SentenceTransformer(str(self.adapter_path), device=self.device)
+                self.model.max_seq_length = 384
+                self._is_peft = False
+                print("[Dense] Phase 3 Fine-Tuned SentenceTransformer loaded successfully.")
         else:
             print(f"[Dense] Loading Baseline Model: {self.model_name}")
             try:
@@ -136,6 +147,38 @@ class DenseRetriever:
         self.index.add(embeddings)
 
         print(f"[Dense] FAISS index built. Vectors: {self.index.ntotal:,}, dim={dim}")
+
+    def add_chunks(self, new_chunks: List[Chunk]) -> int:
+        """
+        Incrementally embed and append new chunks to the existing FAISS index.
+        Does NOT re-embed old chunks — takes 1-2 seconds.
+
+        Args:
+            new_chunks: List of new Chunk objects to add.
+
+        Returns:
+            Number of chunks successfully added.
+        """
+        if self.index is None:
+            raise RuntimeError("FAISS index not loaded. Load or build index first.")
+        if not new_chunks:
+            return 0
+
+        self._load_model()
+        texts = [c.text for c in new_chunks]
+
+        embeddings = self.model.encode(
+            texts,
+            batch_size=self.batch_size,
+            show_progress_bar=False,
+            convert_to_numpy=True,
+            normalize_embeddings=True,
+        ).astype(np.float32)
+
+        self.index.add(embeddings)
+        self.chunks.extend(new_chunks)
+        print(f"[Dense] Incrementally added {len(new_chunks):,} chunks. Total FAISS vectors: {self.index.ntotal:,}")
+        return len(new_chunks)
 
     # ── Retrieval ──────────────────────────────────────────────────────────
 
@@ -231,3 +274,35 @@ class DenseRetriever:
         instance._load_model()
         print(f"[Dense] Loaded {len(instance.chunks):,} chunks.")
         return instance
+
+    def reload_adapter(self, new_adapter_path: Optional[str] = None) -> bool:
+        """
+        Hot-swap the active embedding model weights in memory without rebuilding FAISS.
+        Zero downtime: subsequent queries immediately use the newly fine-tuned weights.
+        """
+        import os
+        import torch
+        from sentence_transformers import SentenceTransformer
+
+        path = new_adapter_path or self.adapter_path
+        if not path or not Path(path).exists():
+            log.warning(f"[Dense] Cannot reload adapter: path does not exist ({path})")
+            return False
+
+        try:
+            print(f"[Dense] Hot-swapping embedding adapter to: {path}")
+            num_threads = min(8, os.cpu_count() or 4)
+            torch.set_num_threads(num_threads)
+            new_model = SentenceTransformer(str(path), device=self.device)
+            new_model.max_seq_length = 384
+
+            # Atomic in-memory swap
+            self.model = new_model
+            self.adapter_path = str(path)
+            self._is_peft = False
+            print("[Dense] [OK] Model hot-swapped successfully. Live queries now use updated weights.")
+            return True
+        except Exception as e:
+            log.error(f"[Dense] Hot-swap failed: {e}", exc_info=True)
+            return False
+

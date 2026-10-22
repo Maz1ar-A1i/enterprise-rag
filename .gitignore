@@ -35,3 +35,18 @@ htmlcov/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Large model binaries & index stores
+indexes/*.bin
+indexes/*.pkl
+corpus/processed/chunks.jsonl
+corpus/processed/continual_archive.jsonl
+corpus/processed/continual_buffer.jsonl
+*.safetensors
+*.bak
+embedding_adapter_backup/
+
+# Raw Datasets (excluded to prevent Git bloat)
+enterprise-rag-dataset/
+corpus/raw/
+domain_trained_enterprise_corpus/

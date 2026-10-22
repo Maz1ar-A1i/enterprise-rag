@@ -98,26 +98,36 @@ class AdvancedRetriever:
         # Step 3: Balanced Round-Robin Merge across sub-queries
         # Guarantees that if 4 sub-queries were asked, each gets top slots!
         merged_chunks: List[Chunk] = []
+        merged_scores: List[float] = []
         seen_ids = set()
         
+        all_raw_scores = [float(s) for r in sub_results for _, s in r if float(s) > 0]
+        max_sub_score = max(all_raw_scores, default=1.0)
+        if max_sub_score <= 0:
+            max_sub_score = 1.0
+
         max_depth = max((len(r) for r in sub_results), default=0)
         for rank_idx in range(max_depth):
             for sq_idx, res_list in enumerate(sub_results):
                 if rank_idx < len(res_list):
-                    chunk, _ = res_list[rank_idx]
+                    chunk, raw_score = res_list[rank_idx]
                     if chunk.chunk_id not in seen_ids:
                         seen_ids.add(chunk.chunk_id)
                         merged_chunks.append(chunk)
+                        # Normalize score into [0.15, 0.95]
+                        norm_s = round(max(0.15, min(0.95, float(raw_score) / max_sub_score)), 4)
+                        merged_scores.append(norm_s)
 
         if not merged_chunks:
             return RetrievalResult([], []), sub_queries
 
         # Step 4: Cross-Encoder Reranking (if enabled)
+        pool_size = min(len(merged_chunks), max(limit * 3, 20))
         if use_reranker and self.reranker:
             try:
                 candidate_pool = RetrievalResult(
-                    chunks=merged_chunks[: max(limit * 3, 20)],
-                    scores=[1.0 / (i + 1) for i in range(min(len(merged_chunks), max(limit * 3, 20)))]
+                    chunks=merged_chunks[:pool_size],
+                    scores=merged_scores[:pool_size],
                 )
                 rerank_query = " ".join(sub_queries) if sub_queries else raw_query
                 final_res = self.reranker.rerank(rerank_query, candidate_pool, top_k=limit)
@@ -125,7 +135,7 @@ class AdvancedRetriever:
             except Exception as e:
                 log.warning(f"Reranking failed, using balanced merged pool: {e}")
 
-        # If reranker is disabled or errored, return balanced merged pool
+        # If reranker is disabled or errored, return balanced merged pool with normalized scores
         selected = merged_chunks[:limit]
-        scores = [1.0 / (i + 1) for i in range(len(selected))]
+        scores = merged_scores[:limit]
         return RetrievalResult(selected, scores), sub_queries

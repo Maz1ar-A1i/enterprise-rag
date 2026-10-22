@@ -26,6 +26,7 @@ Output:
 """
 
 import sys
+import os
 import json
 import argparse
 import logging
@@ -62,8 +63,8 @@ def main():
                         help="Evaluate only the first N questions (for testing)")
     parser.add_argument("--categories", nargs="+", default=None,
                         help="Only evaluate questions from these categories")
-    parser.add_argument("--phase", type=int, default=None, choices=[1, 2],
-                        help="Phase checkpoint to evaluate (1: Baseline, 2: + Reranker FT)")
+    parser.add_argument("--phase", type=int, default=None, choices=[1, 2, 3, 4],
+                        help="Phase checkpoint to evaluate (1: Baseline, 2: + Reranker FT, 3: + Embedding FT, 4: Full Defended Production)")
     parser.add_argument("--pipeline", default="naive", choices=["naive", "advanced"],
                         help="Pipeline type to evaluate ('naive' or 'advanced')")
     parser.add_argument("--no-report", action="store_true",
@@ -73,8 +74,13 @@ def main():
     # Determine config by phase if specified
     if args.phase == 1:
         args.config = "configs/naive_rag_config.yaml"
+        args.pipeline = "naive"
     elif args.phase == 2:
         args.config = "configs/phase2_rag_config.yaml"
+        args.pipeline = "naive"
+    elif args.phase in (3, 4):
+        args.config = "configs/phase3_rag_config.yaml"
+        args.pipeline = "advanced"
 
     # ── Load config ────────────────────────────────────────────────────────
     with open(args.config, "r", encoding="utf-8") as f:
@@ -118,7 +124,12 @@ def main():
         log.error("Run scripts/build_index.py first.")
         sys.exit(1)
 
-    groq = GroqClient()
+    provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+    if provider == "ollama":
+        from src.generation.ollama_client import OllamaClient
+        groq = OllamaClient()
+    else:
+        groq = GroqClient()
 
     # ── Run evaluation ─────────────────────────────────────────────────────
     print("\n[Runner] Starting evaluation run...")

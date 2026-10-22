@@ -260,7 +260,12 @@ class NaiveRAGPipeline:
             batch_size=rer_cfg.get("batch_size", 16),
         )
 
-        groq = GroqClient()
+        provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+        if provider == "ollama":
+            from src.generation.ollama_client import OllamaClient
+            groq = OllamaClient()
+        else:
+            groq = GroqClient()
 
         return cls(
             bm25=bm25,

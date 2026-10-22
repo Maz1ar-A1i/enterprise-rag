@@ -15,73 +15,71 @@ from typing import List, Dict, Optional
 
 log = logging.getLogger(__name__)
 
-# Common DevOps / Cloud terms, typos, and abbreviations mapping
+# Common enterprise workplace terms, typos, and abbreviations mapping
 CANONICAL_SYNONYMS = {
-    # Kubernetes
-    "kubernete": "kubernetes",
-    "kubernet": "kubernetes",
-    "kubernot": "kubernetes",
-    "kubernetees": "kubernetes",
-    "kuberneties": "kubernetes",
-    "kubernetis": "kubernetes",
-    "kuber": "kubernetes",
-    "k8s": "kubernetes",
-    "k8": "kubernetes",
-    "kubectl": "kubernetes kubectl",
-    "kubelet": "kubernetes kubelet",
-    "kube-proxy": "kubernetes kube-proxy",
-    "apiserver": "kubernetes api-server",
-    "ingress": "kubernetes ingress",
-    "configmap": "kubernetes configmap",
-    "daemonset": "kubernetes daemonset",
-    "statefulset": "kubernetes statefulset",
-    
-    # Docker
-    "tocker": "docker",
-    "dockr": "docker",
-    "docke": "docker",
-    "dokcer": "docker",
-    "dockers": "docker",
-    "docker": "docker",
-    "dockerfile": "docker dockerfile",
-    "docker-compose": "docker compose",
-    
-    # Vector DB / Search
-    "fiass": "faiss",
-    "fais": "faiss",
-    "bm-25": "bm25",
-    "vectordb": "vector database faiss",
-    
-    # Databases & Frameworks
-    "postgre": "postgresql",
-    "postgres": "postgresql",
-    "postgress": "postgresql",
-    "postgresq": "postgresql",
-    "postgresql": "postgresql",
-    "psql": "postgresql",
-    "pg": "postgresql",
-    "fastgpi": "fastapi",
-    "fastapi": "fastapi",
-    "fast-api": "fastapi",
-    "gh actions": "github actions",
-    "gha": "github actions workflow",
-    "promql": "prometheus promql",
-    "promethus": "prometheus",
-    "prometheos": "prometheus",
-    "helm chart": "helm chart package",
-    "nginx": "nginx",
-    "linux": "linux",
+    # Slack
+    "slac": "slack",
+    "slak": "slack",
 
-    # DevOps, CI/CD & Containerization Domain Expansion
-    "devops": "devops docker kubernetes github actions ci cd",
-    "dev-ops": "devops docker kubernetes github actions ci cd",
-    "cicd": "ci cd continuous integration github actions",
-    "ci/cd": "ci cd continuous integration github actions",
-    "containerization": "docker container containerization kubernetes",
-    "containers": "docker container containers",
-    "container": "docker container",
-    
-    # Query intent words & typos
+    # Jira
+    "jria": "jira",
+    "jra": "jira",
+
+    # Confluence
+    "confluece": "confluence",
+    "conflunce": "confluence",
+    "confluance": "confluence",
+
+    # GitHub
+    "githb": "github",
+    "git hub": "github",
+    "github pr": "github pull request",
+    "pr": "pull request",
+
+    # Linear
+    "lineer": "linear",
+    "liner": "linear",
+
+    # HubSpot
+    "hubspt": "hubspot",
+    "hub spot": "hubspot",
+    "crm": "hubspot crm",
+
+    # Google Drive
+    "gdrive": "google drive",
+    "g drive": "google drive",
+    "gdocs": "google docs",
+
+    # Gmail
+    "gmal": "gmail",
+    "gmial": "gmail",
+
+    # Meetings / Fireflies
+    "firelies": "fireflies",
+    "meeting trasncript": "meeting transcript",
+    "trasncript": "transcript",
+
+    # Enterprise common terms
+    "sso": "single sign-on SSO",
+    "rbac": "role-based access control RBAC",
+    "sla": "service level agreement SLA",
+    "rpo": "recovery point objective RPO",
+    "rto": "recovery time objective RTO",
+    "mfa": "multi-factor authentication MFA",
+    "okta": "okta SSO identity",
+    "saml": "SAML SSO authentication",
+    "oidc": "OIDC OAuth identity",
+    "idp": "identity provider IdP",
+    "api key": "API key credential",
+    "apikey": "API key credential",
+    "oncall": "on-call escalation",
+    "on-call": "on-call escalation",
+    "runbook": "runbook incident response",
+    "postmortem": "post-mortem incident review",
+    "k8s": "kubernetes",
+    "kms": "key management service KMS",
+
+    # Query intent typos
     "failuer": "failure",
     "failuers": "failures",
     "diffrence": "difference",
@@ -107,20 +105,20 @@ COMMON_ENGLISH_WORDS = {
     "position", "positions", "offering", "job", "jobs", "market", "demand",
 }
 
-# Core vocabulary for fuzzy spell matching
+# Core vocabulary for fuzzy spell matching — enterprise workplace domain
 KNOWN_VOCABULARY = [
-    "kubernetes", "kubectl", "kubelet", "kube-proxy", "ingress", "configmap",
-    "daemonset", "statefulset", "deployment", "service", "pod", "namespace",
-    "docker", "dockerfile", "container", "image", "registry", "compose", "volume",
-    "postgresql", "postgres", "psql", "mvcc", "vacuum", "pgpool",
-    "fastapi", "uvicorn", "pydantic", "endpoint", "dependency",
-    "faiss", "embedding", "vector", "dense", "similarity", "retrieval",
-    "prometheus", "grafana", "metrics", "promql", "alertmanager",
-    "nginx", "reverse-proxy", "upstream", "ssl", "tls",
-    "github", "actions", "workflow", "ci", "cd", "pipeline",
-    "helm", "chart", "release", "values",
-    "linux", "systemd", "journalctl", "cgroups",
-    "devops", "cicd", "containerization"
+    # Enterprise channels
+    "slack", "jira", "confluence", "gmail", "google", "drive", "github",
+    "hubspot", "linear", "fireflies", "transcript", "meeting",
+    # Enterprise concepts
+    "sso", "rbac", "sla", "rpo", "rto", "mfa", "okta", "saml", "oidc",
+    "runbook", "postmortem", "incident", "escalation", "oncall",
+    "authentication", "authorization", "entitlement", "credential",
+    "kubernetes", "faiss", "embedding", "retrieval", "vector",
+    "policy", "contract", "onboarding", "offboarding", "contractor",
+    "deployment", "rollback", "latency", "throughput", "failover",
+    "ticket", "sprint", "milestone", "epic", "backlog",
+    "pipeline", "workflow", "integration", "endpoint",
 ]
 
 
@@ -201,11 +199,11 @@ class QueryTransformer:
         q_clean = query.strip()
         q_lower = query.lower()
         
-        # Detect all mentioned core technologies
+        # Detect all mentioned core enterprise channels / topics
         core_techs = [
-            "docker", "kubernetes", "postgresql", "fastapi", "faiss", 
-            "prometheus", "nginx", "github actions", "helm", "linux", "bm25",
-            "devops", "cicd", "ci/cd"
+            "slack", "jira", "confluence", "gmail", "google drive", "github",
+            "hubspot", "linear", "fireflies", "meeting",
+            "sso", "rbac", "sla", "runbook", "incident", "failover",
         ]
         
         found_techs = []
@@ -221,12 +219,10 @@ class QueryTransformer:
             
             sub_queries = []
             for tech in found_techs:
-                if tech in ("devops", "cicd", "ci/cd"):
-                    sub_queries.append("docker kubernetes containerization ci cd github actions devops architecture")
-                elif has_failures:
-                    sub_queries.append(f"{tech} architecture features purpose components and failure troubleshooting")
+                if has_failures:
+                    sub_queries.append(f"{tech} failure troubleshooting incident resolution")
                 else:
-                    sub_queries.append(f"{tech} architecture features components and operations")
+                    sub_queries.append(f"{tech} content information details")
             
             # Add comparison query if user asked for comparison, differences or pros/cons
             if any(w in q_lower for w in ["compare", "contrast", "difference", "differences", "vs", "versus", "pros", "cons", "table"]):
@@ -256,15 +252,15 @@ class QueryTransformer:
         Corrects keyboard typos, expands abbreviations, and splits compound questions.
         """
         system_prompt = (
-            "You are an expert DevOps, Containers, Cloud Infrastructure, and Databases Query Normalizer. "
-            "Your objective is to prepare user queries for high-precision technical documentation retrieval.\n"
+            "You are an expert Enterprise Workplace Knowledge Query Normalizer. "
+            "Your objective is to prepare user queries for high-precision retrieval from enterprise internal knowledge bases (Slack, Jira, Confluence, Gmail, Google Drive, GitHub, HubSpot, Linear, meeting transcripts).\n"
             "Rules:\n"
-            "1. TYPO RECOVERY: Detect and correct all keyboard typos, misspellings, and phonetic slips in technical terms "
-            "(e.g., 'tocker' -> 'docker', 'postgre' -> 'postgresql', 'kubernete' -> 'kubernetes', 'fastgpi' -> 'fastapi', 'fiass' -> 'faiss', 'psql' -> 'postgresql', 'gha' -> 'github actions').\n"
-            "2. NEVER SUBSTITUTE TECHNOLOGIES: NEVER replace a requested technology (e.g., PostgreSQL / postgres) with an unrequested one (e.g., Helm, Nginx). Always preserve all user-specified technologies.\n"
-            "3. DECOMPOSITION: If the user query asks about multiple distinct technologies or topics (e.g. 'what is X and Y'), "
-            "decompose it into separate focused search queries for EACH requested technology.\n"
-            "4. SINGLE TOPIC: If the query asks about a single topic (e.g. 'what is tocker'), return a 1-element array with the corrected query (e.g. ['what is docker']).\n"
+            "1. TYPO RECOVERY: Detect and correct all keyboard typos, misspellings, and abbreviations in enterprise terms "
+            "(e.g., 'slac' -> 'slack', 'jria' -> 'jira', 'confluece' -> 'confluence', 'sso' -> 'single sign-on SSO', 'rbac' -> 'role-based access control').\n"
+            "2. NEVER SUBSTITUTE: NEVER replace a requested topic (e.g., 'SLA') with an unrelated one. Preserve all user-specified topics.\n"
+            "3. DECOMPOSITION: If the user query asks about multiple distinct topics, "
+            "decompose it into separate focused search queries for EACH topic.\n"
+            "4. SINGLE TOPIC: If the query asks about a single topic, return a 1-element array with the corrected query.\n"
             "5. OUTPUT FORMAT: Return ONLY a valid JSON array of strings: [\"query 1\", \"query 2\"]"
         )
         user_msg = f"User Query: {query}"

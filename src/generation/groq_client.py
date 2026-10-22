@@ -36,8 +36,8 @@ log = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-DEFAULT_GENERATE_MODEL = os.getenv("GROQ_GENERATE_MODEL", "llama-3.3-70b-versatile")
-DEFAULT_JUDGE_MODEL    = os.getenv("GROQ_JUDGE_MODEL",    "llama-3.1-8b-instant")
+DEFAULT_GENERATE_MODEL = os.getenv("GROQ_GENERATE_MODEL", "openai/gpt-oss-20b")
+DEFAULT_JUDGE_MODEL    = os.getenv("GROQ_JUDGE_MODEL",    "openai/gpt-oss-20b")
 
 # Free tier: 30 req/min = 1 request every 2 seconds (we use 2.2s to be safe)
 _MIN_REQUEST_INTERVAL_SEC = 2.2

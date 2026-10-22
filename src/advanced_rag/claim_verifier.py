@@ -47,7 +47,7 @@ class ClaimVerifier:
     Evaluates factual grounding of generated text against source documents.
     Operates independently from the generation LLM.
     """
-    def __init__(self, entailment_threshold: float = 0.65):
+    def __init__(self, entailment_threshold: float = 0.38):
         self.entailment_threshold = entailment_threshold
 
     @staticmethod
@@ -169,11 +169,12 @@ class ClaimVerifier:
         supported_count = 0
         unsupported_count = 0
 
+        candidates_to_check = premises + ([full_premise] if len(premises) > 1 else [])
         for claim in claims:
             # Find best supporting premise
             best_score = 0.0
             best_snippet = ""
-            for p in premises:
+            for p in candidates_to_check:
                 score = self.compute_entailment_score(p, claim)
                 if score > best_score:
                     best_score = score

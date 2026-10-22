@@ -110,6 +110,7 @@ def main():
 
         dense = DenseRetriever(
             model_name=emb_cfg["model_name"],
+            adapter_path=emb_cfg.get("adapter_path"),
             device=emb_cfg.get("device", "cpu"),
             batch_size=batch_size,
         )
