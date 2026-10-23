@@ -20,7 +20,7 @@ load_dotenv()
 log = logging.getLogger(__name__)
 
 DEFAULT_OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-DEFAULT_OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5vl:3b")
+DEFAULT_OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:3b")
 
 
 class OllamaClient:
@@ -81,7 +81,9 @@ class OllamaClient:
             "stream": False,
             "options": {
                 "temperature": temperature,
-                "num_predict": max_tokens,
+                "num_predict": min(max_tokens, 400),
+                "num_ctx": 2048,
+                "num_thread": 8,
             },
         }
 

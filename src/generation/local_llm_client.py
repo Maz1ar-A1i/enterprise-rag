@@ -177,12 +177,26 @@ class LocalLLMClient:
         user_message = correct_typos(user_message)
 
         if not self._loaded or self._model is None:
+            provider = os.getenv("LLM_PROVIDER", "groq").lower()
+            if provider == "groq":
+                from src.generation.groq_client import GroqClient
+                groq = GroqClient()
+                model_name = os.getenv("GROQ_GENERATE_MODEL", "openai/gpt-oss-20b")
+                return groq.call(
+                    system_prompt=system_prompt,
+                    user_message=user_message,
+                    model=model_name,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    use_cache=False,
+                )
+
             # Check if Ollama is running locally first
             try:
                 from src.generation.ollama_client import OllamaClient
                 ollama = OllamaClient()
                 if ollama.is_available():
-                    ollama_model = os.getenv("OLLAMA_MODEL", "qwen2.5vl:3b")
+                    ollama_model = os.getenv("OLLAMA_MODEL", "qwen2.5:3b")
                     return ollama.call(
                         system_prompt=system_prompt,
                         user_message=user_message,

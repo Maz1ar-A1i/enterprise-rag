@@ -1,5 +1,5 @@
 {
-  "total_chunks": 113055,
+  "total_chunks": 113057,
   "total_documents": 25000,
   "sources": {
     "confluence": 35645,
@@ -11,10 +11,10 @@
     "slack": 330,
     "gmail": 299,
     "fireflies": 292,
-    "custom": 5
+    "custom": 7
   },
   "avg_tokens": 292.6,
   "min_tokens": 30,
   "max_tokens": 1175,
-  "completed_at": "2026-10-22T12:48:41.640206"
+  "completed_at": "2026-10-23T11:10:29.031837"
 }

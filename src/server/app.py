@@ -1135,7 +1135,7 @@ def evaluate_all_phases(req: ResearchEvalRequest):
     sys_p4, usr_p4 = build_advanced_prompt(clean_q, _RR(chunks=p4_chunks, scores=p4_scores), [clean_q])
     t_gen_0 = time.time()
     try:
-        ans_p4 = groq.call(system_prompt=sys_p4, user_message=usr_p4, temperature=0.05, max_tokens=1500)
+        ans_p4 = groq.call(system_prompt=sys_p4, user_message=usr_p4, temperature=0.05, max_tokens=400)
     except Exception as e:
         ans_p4 = f"Generation error: {e}"
     p4_gen_ms = (time.time() - t_gen_0) * 1000
@@ -1144,7 +1144,7 @@ def evaluate_all_phases(req: ResearchEvalRequest):
     sys_p1, usr_p1 = build_prompt(clean_q, _RR(chunks=p1_chunks, scores=p1_scores))
     t_gen_1 = time.time()
     try:
-        ans_p1 = groq.call(system_prompt=sys_p1, user_message=usr_p1, temperature=0.7, max_tokens=600)
+        ans_p1 = groq.call(system_prompt=sys_p1, user_message=usr_p1, temperature=0.7, max_tokens=300)
     except Exception as e:
         ans_p1 = f"Baseline generation error: {e}"
     p1_gen_ms = (time.time() - t_gen_1) * 1000

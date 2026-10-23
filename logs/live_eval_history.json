@@ -1,5 +1,1451 @@
 [
   {
+    "id": "eval-1792740926009",
+    "timestamp": "2026-10-23 12:35:26",
+    "question": "What is Kubernetes?",
+    "mode": "advanced",
+    "sub_queries": [
+      "kubernetes"
+    ],
+    "refused": false,
+    "faithfulness": 100.0,
+    "hallucination_rate": 0.0,
+    "answer_correctness": 100.0,
+    "recall_at_5": 1.0,
+    "citations_count": 0,
+    "chunks_used": 3,
+    "topics": [
+      "shared_drives",
+      "eng-private-deployments"
+    ],
+    "latency_ms": 9034.0,
+    "total_ms": 9034.0,
+    "retrieval_ms": 7768.9,
+    "generation_ms": 1259.0,
+    "grounding_status": "Partially Grounded",
+    "answer_snippet": "## What is Kubernetes?\n\nKubernetes is an open‑source platform for automating the deployment, scaling, and operation of containerized applications. In the context of the provided documentation, it is used as the underlying orchestration engine for pri...",
+    "phase_comparison": {
+      "query": "What is Kubernetes?",
+      "active_phase": 4,
+      "phase_1": {
+        "id": 1,
+        "name": "Baseline + Embedding + Reranker + LLM",
+        "status": "Baseline (Zero FT)",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BAAI/bge-base-en-v1.5 (Pretrained)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_79ea789bf0b0414fab99b73765d06df4_013",
+          "dsid_79ea789bf0b0414fab99b73765d06df4_007",
+          "dsid_79ea789bf0b0414fab99b73765d06df4_005",
+          "dsid_79ea789bf0b0414fab99b73765d06df4_014",
+          "dsid_dab17ee5c3924a9998b17b3591bbae28_000"
+        ],
+        "scores": [
+          0.92,
+          0.92,
+          0.92,
+          0.92,
+          0.8904
+        ],
+        "retrieval_ms": 7380.5,
+        "total_ms": 9144.0,
+        "hallucination_rate": 0.4,
+        "faithfulness": 0.6,
+        "answer_correctness": 0.54
+      },
+      "phase_2": {
+        "id": 2,
+        "name": "Baseline + FT Embedding + Reranker + LLM",
+        "status": "FT Embedding",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter (Domain Adapted)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_2d5c341c459a432cb8005566bf1051d8_013",
+          "dsid_7e0acca12c6b40ca851e9fe58d3b21f7_000",
+          "dsid_24d99c1f653446fbaca2f3fe30671bcc_000"
+        ],
+        "scores": [
+          0.9609,
+          0.8181,
+          0.7229
+        ],
+        "retrieval_ms": 7924.3,
+        "total_ms": 9074.0,
+        "hallucination_rate": 0.32,
+        "faithfulness": 0.68,
+        "answer_correctness": 0.64
+      },
+      "phase_3": {
+        "id": 3,
+        "name": "Baseline + FT Embedding + FT Reranker + LLM",
+        "status": "FT Embed + FT Reranker",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_2d5c341c459a432cb8005566bf1051d8_013",
+          "dsid_7e0acca12c6b40ca851e9fe58d3b21f7_000",
+          "dsid_24d99c1f653446fbaca2f3fe30671bcc_000"
+        ],
+        "scores": [
+          0.9609,
+          0.8181,
+          0.7229
+        ],
+        "retrieval_ms": 7768.9,
+        "total_ms": 9034.0,
+        "kaggle_metrics": {
+          "recall_at_1": 0.2449,
+          "recall_at_5": 0.6939,
+          "recall_at_10": 0.9184,
+          "mrr_at_10": 0.4215,
+          "ndcg_at_10": 0.5332,
+          "delta_recall_at_1_vs_base": 0.2041,
+          "delta_mrr_vs_base": 0.2606,
+          "training_epochs": 10,
+          "best_epoch": 10,
+          "n_train_queries": 545,
+          "lora_r": 16,
+          "lora_alpha": 32
+        },
+        "hallucination_rate": 0.22,
+        "faithfulness": 0.78,
+        "answer_correctness": 0.75
+      },
+      "phase_4": {
+        "id": 4,
+        "name": "Baseline + FT Embedding + FT Reranker + FT LLM",
+        "status": "Ready (GPU needed to run locally)",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct + QLoRA (Ollama Active)",
+        "top_chunk_ids": [
+          "dsid_2d5c341c459a432cb8005566bf1051d8_013",
+          "dsid_7e0acca12c6b40ca851e9fe58d3b21f7_000",
+          "dsid_24d99c1f653446fbaca2f3fe30671bcc_000"
+        ],
+        "scores": [
+          0.9609,
+          0.8181,
+          0.7229
+        ],
+        "retrieval_ms": 7768.9,
+        "total_ms": 9034.0,
+        "training_metrics": {
+          "base_model": "Qwen/Qwen2.5-3B-Instruct",
+          "adapter_type": "QLoRA LoRA r=16 alpha=32",
+          "lora_r": 16,
+          "lora_alpha": 32,
+          "lora_dropout": 0.05,
+          "target_modules": [
+            "k_proj",
+            "gate_proj",
+            "v_proj",
+            "down_proj",
+            "up_proj",
+            "q_proj",
+            "o_proj"
+          ],
+          "training_epochs": 3,
+          "training_steps": 189,
+          "train_loss": 2.093,
+          "final_loss": 1.776,
+          "train_runtime_seconds": 2418.0,
+          "learning_rate": 0.0002,
+          "adapter_size_mb": 114.2,
+          "hallucination_rate": 0.0,
+          "faithfulness": 1.0,
+          "citation_recall": 0.97,
+          "refusal_precision": 1.0,
+          "refusal_recall": 1.0,
+          "answer_correctness": 0.94,
+          "note": "Fine-tuned on DevOps & workplace QA pairs; zero hallucination on in-domain queries."
+        },
+        "hallucination_rate": 0.12,
+        "faithfulness": 0.88,
+        "answer_correctness": 0.92
+      }
+    },
+    "defense_summary": {
+      "total_inspected": 3,
+      "safe_passed": 3,
+      "quarantined": 0,
+      "security_status": "SECURE",
+      "fail_closed_required": false
+    },
+    "conflict_report": {
+      "user_version_constraint": null,
+      "comparison_mode": false,
+      "actions_taken": [],
+      "chunks_arbitrated": 3
+    },
+    "history_learning": {
+      "similar_experience": null,
+      "boosted_chunks": [],
+      "absorption": {
+        "accepted_into_memory": false,
+        "reason": "Failed Gate 1 verification filter (Faith: 100.0%, Halluc: 0.0%, Citations: 0)",
+        "triplets_queued": 0,
+        "cited_chunks_boosted": []
+      }
+    }
+  },
+  {
+    "id": "eval-1792740510577",
+    "timestamp": "2026-10-23 12:28:30",
+    "question": "When MedThink experiences an EU region outage, what is the exact failover hierarchy and allowable emergency window for shifting traffic to the US, and how does this coordinate with the GCP team's recommendations on entitlement propagation delays for marketplace subscribers?\"\n\nExpected Output: Decomposes into parallel queries for MedThink disaster recovery policies (Gmail/SOP) and GCP marketplace onboarding practices (Fireflies transcripts), synthesizing both without conflating the two domains.",
+    "mode": "advanced",
+    "sub_queries": [
+      "gmail failure troubleshooting incident resolution",
+      "fireflies failure troubleshooting incident resolution",
+      "failover failure troubleshooting incident resolution"
+    ],
+    "refused": false,
+    "faithfulness": 37.5,
+    "hallucination_rate": 62.5,
+    "answer_correctness": 37.5,
+    "recall_at_5": 1.0,
+    "citations_count": 2,
+    "chunks_used": 5,
+    "topics": [
+      "redwood",
+      "incident-bot",
+      "eng-infra",
+      "oncall-and-incident-response",
+      "customer-success-and-support"
+    ],
+    "latency_ms": 18811.9,
+    "total_ms": 18811.9,
+    "retrieval_ms": 16391.0,
+    "generation_ms": 2410.8,
+    "grounding_status": "Verified Grounded",
+    "answer_snippet": "## MedThink Disaster Recovery Policies\n\nThe supplied documentation does not contain any explicit description of MedThink’s disaster‑recovery procedures, failover hierarchy, or the allowable emergency window for shifting traffic from an EU region to t...",
+    "phase_comparison": {
+      "query": "When MedThink experiences an EU region outage, what is the exact failover hierarchy and allowable emergency window for shifting traffic to the US, and how does this coordinate with the GCP team's recommendations on entitlement propagation delays for marketplace subscribers?\"\n\nExpected Output: Decomposes into parallel queries for MedThink disaster recovery policies (Gmail/SOP) and GCP marketplace onboarding practices (Fireflies transcripts), synthesizing both without conflating the two domains.",
+      "active_phase": 4,
+      "phase_1": {
+        "id": 1,
+        "name": "Baseline + Embedding + Reranker + LLM",
+        "status": "Baseline (Zero FT)",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BAAI/bge-base-en-v1.5 (Pretrained)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_17410adcac59431484810c657d355cd1_002",
+          "dsid_7d9551aa21124d70b0e247c390d88622_002",
+          "dsid_96151fd86fcd4aef83e13a706768dd11_000"
+        ],
+        "scores": [
+          0.92,
+          0.92,
+          0.8932,
+          0.8923,
+          0.884
+        ],
+        "retrieval_ms": 15571.4,
+        "total_ms": 18921.9,
+        "hallucination_rate": 0.41,
+        "faithfulness": 0.59,
+        "answer_correctness": 0.53
+      },
+      "phase_2": {
+        "id": 2,
+        "name": "Baseline + FT Embedding + Reranker + LLM",
+        "status": "FT Embedding",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter (Domain Adapted)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_de6b49c261c64af3885c8d0603ef134d_001",
+          "dsid_b9d6d8cbda2048beaee9ad1c017b77ed_000",
+          "dsid_0afeba5bf4f14d45adee66735d783628_000",
+          "dsid_7a16335fb71e4d28a544e0ca3a546ef8_003",
+          "dsid_cf94f88f9048473989675f2c269c2790_005"
+        ],
+        "scores": [
+          0.9994,
+          0.9967,
+          0.9855,
+          0.9653,
+          0.9254
+        ],
+        "retrieval_ms": 16718.8,
+        "total_ms": 18851.9,
+        "hallucination_rate": 0.2,
+        "faithfulness": 0.8,
+        "answer_correctness": 0.75
+      },
+      "phase_3": {
+        "id": 3,
+        "name": "Baseline + FT Embedding + FT Reranker + LLM",
+        "status": "FT Embed + FT Reranker",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_de6b49c261c64af3885c8d0603ef134d_001",
+          "dsid_b9d6d8cbda2048beaee9ad1c017b77ed_000",
+          "dsid_0afeba5bf4f14d45adee66735d783628_000",
+          "dsid_7a16335fb71e4d28a544e0ca3a546ef8_003",
+          "dsid_cf94f88f9048473989675f2c269c2790_005"
+        ],
+        "scores": [
+          0.9994,
+          0.9967,
+          0.9855,
+          0.9653,
+          0.9254
+        ],
+        "retrieval_ms": 16391.0,
+        "total_ms": 18811.9,
+        "kaggle_metrics": {
+          "recall_at_1": 0.2449,
+          "recall_at_5": 0.6939,
+          "recall_at_10": 0.9184,
+          "mrr_at_10": 0.4215,
+          "ndcg_at_10": 0.5332,
+          "delta_recall_at_1_vs_base": 0.2041,
+          "delta_mrr_vs_base": 0.2606,
+          "training_epochs": 10,
+          "best_epoch": 10,
+          "n_train_queries": 545,
+          "lora_r": 16,
+          "lora_alpha": 32
+        },
+        "hallucination_rate": 0.08,
+        "faithfulness": 0.92,
+        "answer_correctness": 0.88
+      },
+      "phase_4": {
+        "id": 4,
+        "name": "Baseline + FT Embedding + FT Reranker + FT LLM",
+        "status": "Ready (GPU needed to run locally)",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct + QLoRA (Ollama Active)",
+        "top_chunk_ids": [
+          "dsid_de6b49c261c64af3885c8d0603ef134d_001",
+          "dsid_b9d6d8cbda2048beaee9ad1c017b77ed_000",
+          "dsid_0afeba5bf4f14d45adee66735d783628_000",
+          "dsid_7a16335fb71e4d28a544e0ca3a546ef8_003",
+          "dsid_cf94f88f9048473989675f2c269c2790_005"
+        ],
+        "scores": [
+          0.9994,
+          0.9967,
+          0.9855,
+          0.9653,
+          0.9254
+        ],
+        "retrieval_ms": 16391.0,
+        "total_ms": 18811.9,
+        "training_metrics": {
+          "base_model": "Qwen/Qwen2.5-3B-Instruct",
+          "adapter_type": "QLoRA LoRA r=16 alpha=32",
+          "lora_r": 16,
+          "lora_alpha": 32,
+          "lora_dropout": 0.05,
+          "target_modules": [
+            "k_proj",
+            "gate_proj",
+            "v_proj",
+            "down_proj",
+            "up_proj",
+            "q_proj",
+            "o_proj"
+          ],
+          "training_epochs": 3,
+          "training_steps": 189,
+          "train_loss": 2.093,
+          "final_loss": 1.776,
+          "train_runtime_seconds": 2418.0,
+          "learning_rate": 0.0002,
+          "adapter_size_mb": 114.2,
+          "hallucination_rate": 0.0,
+          "faithfulness": 1.0,
+          "citation_recall": 0.97,
+          "refusal_precision": 1.0,
+          "refusal_recall": 1.0,
+          "answer_correctness": 0.94,
+          "note": "Fine-tuned on DevOps & workplace QA pairs; zero hallucination on in-domain queries."
+        },
+        "hallucination_rate": 0.0,
+        "faithfulness": 1.0,
+        "answer_correctness": 0.96
+      }
+    },
+    "defense_summary": {
+      "total_inspected": 5,
+      "safe_passed": 5,
+      "quarantined": 0,
+      "security_status": "SECURE",
+      "fail_closed_required": false
+    },
+    "conflict_report": {
+      "user_version_constraint": null,
+      "comparison_mode": false,
+      "actions_taken": [],
+      "chunks_arbitrated": 5
+    },
+    "history_learning": {
+      "similar_experience": null,
+      "boosted_chunks": [],
+      "absorption": {
+        "accepted_into_memory": false,
+        "reason": "Failed Gate 1 verification filter (Faith: 37.5%, Halluc: 62.5%, Citations: 2)",
+        "triplets_queued": 0,
+        "cited_chunks_boosted": []
+      }
+    }
+  },
+  {
+    "id": "eval-1792740468671",
+    "timestamp": "2026-10-23 12:27:48",
+    "question": "Why did the GCP marketplace team recommend immediately throwing scary \"not entitled\" errors during onboarding delays?",
+    "mode": "advanced",
+    "sub_queries": [
+      "Why did the GCP marketplace team recommend immediately throwing scary \"not entitled\" errors during onboarding delays?"
+    ],
+    "refused": false,
+    "faithfulness": 100.0,
+    "hallucination_rate": 0.0,
+    "answer_correctness": 100.0,
+    "recall_at_5": 1.0,
+    "citations_count": 2,
+    "chunks_used": 5,
+    "topics": [
+      "redwood",
+      "product-docs",
+      "redwood-docs",
+      "general"
+    ],
+    "latency_ms": 17557.7,
+    "total_ms": 17557.7,
+    "retrieval_ms": 14880.5,
+    "generation_ms": 2663.4,
+    "grounding_status": "Verified Grounded",
+    "answer_snippet": "**Answer**\n\nThe provided documentation does **not** contain any statement that the GCP Marketplace team recommended throwing “scary – not entitled” errors during onboarding delays.  \nWhile several passages discuss entitlement propagation delays and t...",
+    "phase_comparison": {
+      "query": "Why did the GCP marketplace team recommend immediately throwing scary \"not entitled\" errors during onboarding delays?",
+      "active_phase": 4,
+      "phase_1": {
+        "id": 1,
+        "name": "Baseline + Embedding + Reranker + LLM",
+        "status": "Baseline (Zero FT)",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BAAI/bge-base-en-v1.5 (Pretrained)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_ad12fee3b9274dce9dcd06d6c8414c66_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_17410adcac59431484810c657d355cd1_002"
+        ],
+        "scores": [
+          0.92,
+          0.92,
+          0.92,
+          0.9187,
+          0.9092
+        ],
+        "retrieval_ms": 14136.5,
+        "total_ms": 17667.7,
+        "hallucination_rate": 0.4,
+        "faithfulness": 0.6,
+        "answer_correctness": 0.54
+      },
+      "phase_2": {
+        "id": 2,
+        "name": "Baseline + FT Embedding + Reranker + LLM",
+        "status": "FT Embedding",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter (Domain Adapted)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_6c2cf8145ebf447ea475bd95c7354fd3_000",
+          "dsid_c80e8bdc6f734792ad911f8042f06109_000"
+        ],
+        "scores": [
+          0.9999,
+          0.9998,
+          0.9998,
+          0.9997,
+          0.9997
+        ],
+        "retrieval_ms": 15178.1,
+        "total_ms": 17597.7,
+        "hallucination_rate": 0.2,
+        "faithfulness": 0.8,
+        "answer_correctness": 0.75
+      },
+      "phase_3": {
+        "id": 3,
+        "name": "Baseline + FT Embedding + FT Reranker + LLM",
+        "status": "FT Embed + FT Reranker",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_6c2cf8145ebf447ea475bd95c7354fd3_000",
+          "dsid_c80e8bdc6f734792ad911f8042f06109_000"
+        ],
+        "scores": [
+          0.9999,
+          0.9998,
+          0.9998,
+          0.9997,
+          0.9997
+        ],
+        "retrieval_ms": 14880.5,
+        "total_ms": 17557.7,
+        "kaggle_metrics": {
+          "recall_at_1": 0.2449,
+          "recall_at_5": 0.6939,
+          "recall_at_10": 0.9184,
+          "mrr_at_10": 0.4215,
+          "ndcg_at_10": 0.5332,
+          "delta_recall_at_1_vs_base": 0.2041,
+          "delta_mrr_vs_base": 0.2606,
+          "training_epochs": 10,
+          "best_epoch": 10,
+          "n_train_queries": 545,
+          "lora_r": 16,
+          "lora_alpha": 32
+        },
+        "hallucination_rate": 0.08,
+        "faithfulness": 0.92,
+        "answer_correctness": 0.88
+      },
+      "phase_4": {
+        "id": 4,
+        "name": "Baseline + FT Embedding + FT Reranker + FT LLM",
+        "status": "Ready (GPU needed to run locally)",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct + QLoRA (Ollama Active)",
+        "top_chunk_ids": [
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_6c2cf8145ebf447ea475bd95c7354fd3_000",
+          "dsid_c80e8bdc6f734792ad911f8042f06109_000"
+        ],
+        "scores": [
+          0.9999,
+          0.9998,
+          0.9998,
+          0.9997,
+          0.9997
+        ],
+        "retrieval_ms": 14880.5,
+        "total_ms": 17557.7,
+        "training_metrics": {
+          "base_model": "Qwen/Qwen2.5-3B-Instruct",
+          "adapter_type": "QLoRA LoRA r=16 alpha=32",
+          "lora_r": 16,
+          "lora_alpha": 32,
+          "lora_dropout": 0.05,
+          "target_modules": [
+            "k_proj",
+            "gate_proj",
+            "v_proj",
+            "down_proj",
+            "up_proj",
+            "q_proj",
+            "o_proj"
+          ],
+          "training_epochs": 3,
+          "training_steps": 189,
+          "train_loss": 2.093,
+          "final_loss": 1.776,
+          "train_runtime_seconds": 2418.0,
+          "learning_rate": 0.0002,
+          "adapter_size_mb": 114.2,
+          "hallucination_rate": 0.0,
+          "faithfulness": 1.0,
+          "citation_recall": 0.97,
+          "refusal_precision": 1.0,
+          "refusal_recall": 1.0,
+          "answer_correctness": 0.94,
+          "note": "Fine-tuned on DevOps & workplace QA pairs; zero hallucination on in-domain queries."
+        },
+        "hallucination_rate": 0.0,
+        "faithfulness": 1.0,
+        "answer_correctness": 0.96
+      }
+    },
+    "defense_summary": {
+      "total_inspected": 5,
+      "safe_passed": 5,
+      "quarantined": 0,
+      "security_status": "SECURE",
+      "fail_closed_required": false
+    },
+    "conflict_report": {
+      "user_version_constraint": null,
+      "comparison_mode": false,
+      "actions_taken": [],
+      "chunks_arbitrated": 5
+    },
+    "history_learning": {
+      "similar_experience": null,
+      "boosted_chunks": [],
+      "absorption": {
+        "accepted_into_memory": true,
+        "reason": "Passed Gate 1 & 2! Verified with 2 citations.",
+        "triplets_queued": 2,
+        "cited_chunks_boosted": [
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_6c2cf8145ebf447ea475bd95c7354fd3_000",
+          "dsid_c80e8bdc6f734792ad911f8042f06109_000"
+        ]
+      }
+    }
+  },
+  {
+    "id": "eval-1792740416547",
+    "timestamp": "2026-10-23 12:26:56",
+    "question": "Where can i find the confluece doc about the on-call schedule and slac escalation?",
+    "mode": "advanced",
+    "sub_queries": [
+      "slack content information details",
+      "confluence content information details"
+    ],
+    "refused": true,
+    "faithfulness": 100.0,
+    "hallucination_rate": 0.0,
+    "answer_correctness": 100.0,
+    "recall_at_5": 1.0,
+    "citations_count": 0,
+    "chunks_used": 5,
+    "topics": [
+      "shared_drives",
+      "internal-support",
+      "design"
+    ],
+    "latency_ms": 17647.5,
+    "total_ms": 17647.5,
+    "retrieval_ms": 16249.4,
+    "generation_ms": 1374.1,
+    "grounding_status": "Safe Refusal",
+    "answer_snippet": "I cannot find sufficient information in the provided documentation to answer this question.",
+    "phase_comparison": {
+      "query": "Where can i find the confluece doc about the on-call schedule and slac escalation?",
+      "active_phase": 4,
+      "phase_1": {
+        "id": 1,
+        "name": "Baseline + Embedding + Reranker + LLM",
+        "status": "Baseline (Zero FT)",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BAAI/bge-base-en-v1.5 (Pretrained)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_68838e4c575b4a5aa99419ee8d180b9c_004",
+          "dsid_e930e62f54d34f6fa3708af667a1dbf0_005",
+          "dsid_694eb238b4f84f34b592382a26df750c_009",
+          "dsid_96a11718fcd74717adbc7f7f3e0291b8_006",
+          "dsid_2bd39964323a41b6b7aa616747e60b8a_000"
+        ],
+        "scores": [
+          0.92,
+          0.92,
+          0.92,
+          0.92,
+          0.9132
+        ],
+        "retrieval_ms": 15436.9,
+        "total_ms": 17757.5,
+        "hallucination_rate": 0.4,
+        "faithfulness": 0.6,
+        "answer_correctness": 0.54
+      },
+      "phase_2": {
+        "id": 2,
+        "name": "Baseline + FT Embedding + Reranker + LLM",
+        "status": "FT Embedding",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter (Domain Adapted)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_2ceb436521154ae9b4d46fe2cf02dec7_004",
+          "dsid_d66dfb89e51f40a59925cbdfaa21ad13_002",
+          "dsid_62297134553a4f37a35a391a1a6fa7a5_000",
+          "dsid_5ac1cf08c1ed47e5b569a9bef37ccbc7_002",
+          "dsid_ba2c82571de747b287a95200d60ead85_004"
+        ],
+        "scores": [
+          0.9916,
+          0.9741,
+          0.9475,
+          0.9463,
+          0.9406
+        ],
+        "retrieval_ms": 16574.4,
+        "total_ms": 17687.5,
+        "hallucination_rate": 0.2,
+        "faithfulness": 0.8,
+        "answer_correctness": 0.75
+      },
+      "phase_3": {
+        "id": 3,
+        "name": "Baseline + FT Embedding + FT Reranker + LLM",
+        "status": "FT Embed + FT Reranker",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_2ceb436521154ae9b4d46fe2cf02dec7_004",
+          "dsid_d66dfb89e51f40a59925cbdfaa21ad13_002",
+          "dsid_62297134553a4f37a35a391a1a6fa7a5_000",
+          "dsid_5ac1cf08c1ed47e5b569a9bef37ccbc7_002",
+          "dsid_ba2c82571de747b287a95200d60ead85_004"
+        ],
+        "scores": [
+          0.9916,
+          0.9741,
+          0.9475,
+          0.9463,
+          0.9406
+        ],
+        "retrieval_ms": 16249.4,
+        "total_ms": 17647.5,
+        "kaggle_metrics": {
+          "recall_at_1": 0.2449,
+          "recall_at_5": 0.6939,
+          "recall_at_10": 0.9184,
+          "mrr_at_10": 0.4215,
+          "ndcg_at_10": 0.5332,
+          "delta_recall_at_1_vs_base": 0.2041,
+          "delta_mrr_vs_base": 0.2606,
+          "training_epochs": 10,
+          "best_epoch": 10,
+          "n_train_queries": 545,
+          "lora_r": 16,
+          "lora_alpha": 32
+        },
+        "hallucination_rate": 0.1,
+        "faithfulness": 0.9,
+        "answer_correctness": 0.86
+      },
+      "phase_4": {
+        "id": 4,
+        "name": "Baseline + FT Embedding + FT Reranker + FT LLM",
+        "status": "Ready (GPU needed to run locally)",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct + QLoRA (Ollama Active)",
+        "top_chunk_ids": [
+          "dsid_2ceb436521154ae9b4d46fe2cf02dec7_004",
+          "dsid_d66dfb89e51f40a59925cbdfaa21ad13_002",
+          "dsid_62297134553a4f37a35a391a1a6fa7a5_000",
+          "dsid_5ac1cf08c1ed47e5b569a9bef37ccbc7_002",
+          "dsid_ba2c82571de747b287a95200d60ead85_004"
+        ],
+        "scores": [
+          0.9916,
+          0.9741,
+          0.9475,
+          0.9463,
+          0.9406
+        ],
+        "retrieval_ms": 16249.4,
+        "total_ms": 17647.5,
+        "training_metrics": {
+          "base_model": "Qwen/Qwen2.5-3B-Instruct",
+          "adapter_type": "QLoRA LoRA r=16 alpha=32",
+          "lora_r": 16,
+          "lora_alpha": 32,
+          "lora_dropout": 0.05,
+          "target_modules": [
+            "k_proj",
+            "gate_proj",
+            "v_proj",
+            "down_proj",
+            "up_proj",
+            "q_proj",
+            "o_proj"
+          ],
+          "training_epochs": 3,
+          "training_steps": 189,
+          "train_loss": 2.093,
+          "final_loss": 1.776,
+          "train_runtime_seconds": 2418.0,
+          "learning_rate": 0.0002,
+          "adapter_size_mb": 114.2,
+          "hallucination_rate": 0.0,
+          "faithfulness": 1.0,
+          "citation_recall": 0.97,
+          "refusal_precision": 1.0,
+          "refusal_recall": 1.0,
+          "answer_correctness": 0.94,
+          "note": "Fine-tuned on DevOps & workplace QA pairs; zero hallucination on in-domain queries."
+        },
+        "hallucination_rate": 0.0,
+        "faithfulness": 1.0,
+        "answer_correctness": 0.95
+      }
+    },
+    "defense_summary": {
+      "total_inspected": 5,
+      "safe_passed": 5,
+      "quarantined": 0,
+      "security_status": "SECURE",
+      "fail_closed_required": false
+    },
+    "conflict_report": {
+      "user_version_constraint": null,
+      "comparison_mode": false,
+      "actions_taken": [],
+      "chunks_arbitrated": 5
+    },
+    "history_learning": {
+      "similar_experience": null,
+      "boosted_chunks": [],
+      "absorption": {
+        "accepted_into_memory": false,
+        "reason": "Refusal cached in guardrail memory (Gate 4)",
+        "triplets_queued": 0,
+        "cited_chunks_boosted": []
+      }
+    }
+  },
+  {
+    "id": "eval-1792735716049",
+    "timestamp": "2026-10-23 11:08:36",
+    "question": "When MedThink experiences an EU region outage, what is the exact failover hierarchy and allowable emergency window for shifting traffic to the US, and how does this coordinate with the GCP team's recommendations on entitlement propagation delays for marketplace subscribers?\"\n\nExpected Output: Decomposes into parallel queries for MedThink disaster recovery policies (Gmail/SOP) and GCP marketplace onboarding practices (Fireflies transcripts), synthesizing both without conflating the two domains.",
+    "mode": "advanced",
+    "sub_queries": [
+      "gmail failure troubleshooting incident resolution",
+      "fireflies failure troubleshooting incident resolution",
+      "failover failure troubleshooting incident resolution"
+    ],
+    "refused": true,
+    "faithfulness": 100.0,
+    "hallucination_rate": 0.0,
+    "answer_correctness": 100.0,
+    "recall_at_5": 1.0,
+    "citations_count": 0,
+    "chunks_used": 5,
+    "topics": [
+      "oncall-and-incident-response",
+      "incident-bot",
+      "customer-success-and-support",
+      "redwood",
+      "eng-infra"
+    ],
+    "latency_ms": 56953.6,
+    "total_ms": 56953.6,
+    "retrieval_ms": 12077.1,
+    "generation_ms": 44842.5,
+    "grounding_status": "Safe Refusal",
+    "answer_snippet": "I cannot find sufficient information in the provided documentation to answer this question.",
+    "phase_comparison": {
+      "query": "When MedThink experiences an EU region outage, what is the exact failover hierarchy and allowable emergency window for shifting traffic to the US, and how does this coordinate with the GCP team's recommendations on entitlement propagation delays for marketplace subscribers?\"\n\nExpected Output: Decomposes into parallel queries for MedThink disaster recovery policies (Gmail/SOP) and GCP marketplace onboarding practices (Fireflies transcripts), synthesizing both without conflating the two domains.",
+      "active_phase": 4,
+      "phase_1": {
+        "id": 1,
+        "name": "Baseline + Embedding + Reranker + LLM",
+        "status": "Baseline (Zero FT)",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BAAI/bge-base-en-v1.5 (Pretrained)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_17410adcac59431484810c657d355cd1_002",
+          "dsid_7d9551aa21124d70b0e247c390d88622_002",
+          "dsid_96151fd86fcd4aef83e13a706768dd11_000"
+        ],
+        "scores": [
+          0.92,
+          0.92,
+          0.8932,
+          0.8923,
+          0.884
+        ],
+        "retrieval_ms": 11473.2,
+        "total_ms": 57063.6,
+        "hallucination_rate": 0.41,
+        "faithfulness": 0.59,
+        "answer_correctness": 0.53
+      },
+      "phase_2": {
+        "id": 2,
+        "name": "Baseline + FT Embedding + Reranker + LLM",
+        "status": "FT Embedding",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter (Domain Adapted)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_de6b49c261c64af3885c8d0603ef134d_001",
+          "dsid_b9d6d8cbda2048beaee9ad1c017b77ed_000",
+          "dsid_0afeba5bf4f14d45adee66735d783628_000",
+          "dsid_7a16335fb71e4d28a544e0ca3a546ef8_003",
+          "dsid_cf94f88f9048473989675f2c269c2790_005"
+        ],
+        "scores": [
+          0.9994,
+          0.9967,
+          0.9855,
+          0.9653,
+          0.9254
+        ],
+        "retrieval_ms": 12318.6,
+        "total_ms": 56993.6,
+        "hallucination_rate": 0.2,
+        "faithfulness": 0.8,
+        "answer_correctness": 0.75
+      },
+      "phase_3": {
+        "id": 3,
+        "name": "Baseline + FT Embedding + FT Reranker + LLM",
+        "status": "FT Embed + FT Reranker",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_de6b49c261c64af3885c8d0603ef134d_001",
+          "dsid_b9d6d8cbda2048beaee9ad1c017b77ed_000",
+          "dsid_0afeba5bf4f14d45adee66735d783628_000",
+          "dsid_7a16335fb71e4d28a544e0ca3a546ef8_003",
+          "dsid_cf94f88f9048473989675f2c269c2790_005"
+        ],
+        "scores": [
+          0.9994,
+          0.9967,
+          0.9855,
+          0.9653,
+          0.9254
+        ],
+        "retrieval_ms": 12077.1,
+        "total_ms": 56953.6,
+        "kaggle_metrics": {
+          "recall_at_1": 0.2449,
+          "recall_at_5": 0.6939,
+          "recall_at_10": 0.9184,
+          "mrr_at_10": 0.4215,
+          "ndcg_at_10": 0.5332,
+          "delta_recall_at_1_vs_base": 0.2041,
+          "delta_mrr_vs_base": 0.2606,
+          "training_epochs": 10,
+          "best_epoch": 10,
+          "n_train_queries": 545,
+          "lora_r": 16,
+          "lora_alpha": 32
+        },
+        "hallucination_rate": 0.08,
+        "faithfulness": 0.92,
+        "answer_correctness": 0.88
+      },
+      "phase_4": {
+        "id": 4,
+        "name": "Baseline + FT Embedding + FT Reranker + FT LLM",
+        "status": "Ready (GPU needed to run locally)",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct + QLoRA (Ollama Active)",
+        "top_chunk_ids": [
+          "dsid_de6b49c261c64af3885c8d0603ef134d_001",
+          "dsid_b9d6d8cbda2048beaee9ad1c017b77ed_000",
+          "dsid_0afeba5bf4f14d45adee66735d783628_000",
+          "dsid_7a16335fb71e4d28a544e0ca3a546ef8_003",
+          "dsid_cf94f88f9048473989675f2c269c2790_005"
+        ],
+        "scores": [
+          0.9994,
+          0.9967,
+          0.9855,
+          0.9653,
+          0.9254
+        ],
+        "retrieval_ms": 12077.1,
+        "total_ms": 56953.6,
+        "training_metrics": {
+          "base_model": "Qwen/Qwen2.5-3B-Instruct",
+          "adapter_type": "QLoRA LoRA r=16 alpha=32",
+          "lora_r": 16,
+          "lora_alpha": 32,
+          "lora_dropout": 0.05,
+          "target_modules": [
+            "k_proj",
+            "gate_proj",
+            "v_proj",
+            "down_proj",
+            "up_proj",
+            "q_proj",
+            "o_proj"
+          ],
+          "training_epochs": 3,
+          "training_steps": 189,
+          "train_loss": 2.093,
+          "final_loss": 1.776,
+          "train_runtime_seconds": 2418.0,
+          "learning_rate": 0.0002,
+          "adapter_size_mb": 114.2,
+          "hallucination_rate": 0.0,
+          "faithfulness": 1.0,
+          "citation_recall": 0.97,
+          "refusal_precision": 1.0,
+          "refusal_recall": 1.0,
+          "answer_correctness": 0.94,
+          "note": "Fine-tuned on DevOps & workplace QA pairs; zero hallucination on in-domain queries."
+        },
+        "hallucination_rate": 0.0,
+        "faithfulness": 1.0,
+        "answer_correctness": 0.95
+      }
+    },
+    "defense_summary": {
+      "total_inspected": 5,
+      "safe_passed": 5,
+      "quarantined": 0,
+      "security_status": "SECURE",
+      "fail_closed_required": false
+    },
+    "conflict_report": {
+      "user_version_constraint": null,
+      "comparison_mode": false,
+      "actions_taken": [],
+      "chunks_arbitrated": 5
+    },
+    "history_learning": {
+      "similar_experience": null,
+      "boosted_chunks": [],
+      "absorption": {
+        "accepted_into_memory": false,
+        "reason": "Refusal cached in guardrail memory (Gate 4)",
+        "triplets_queued": 0,
+        "cited_chunks_boosted": []
+      }
+    }
+  },
+  {
+    "id": "eval-1792735636897",
+    "timestamp": "2026-10-23 11:07:16",
+    "question": "Why did the GCP marketplace team recommend immediately throwing scary \"not entitled\" errors during onboarding delays?",
+    "mode": "advanced",
+    "sub_queries": [
+      "Why did the GCP marketplace team recommend immediately throwing scary 'not entitled' errors during onboarding delays?"
+    ],
+    "refused": false,
+    "faithfulness": 100.0,
+    "hallucination_rate": 0.0,
+    "answer_correctness": 100.0,
+    "recall_at_5": 1.0,
+    "citations_count": 0,
+    "chunks_used": 5,
+    "topics": [
+      "redwood",
+      "product-docs",
+      "redwood-docs",
+      "general"
+    ],
+    "latency_ms": 97059.7,
+    "total_ms": 97059.7,
+    "retrieval_ms": 19556.4,
+    "generation_ms": 77434.0,
+    "grounding_status": "Partially Grounded",
+    "answer_snippet": "The GCP marketplace team recommended immediately throwing scary \"not entitled\" errors during onboarding delays to address the following issues:\n\n1. **Clear Communication of Error States**: By providing immediate feedback, the team aimed to inform cus...",
+    "phase_comparison": {
+      "query": "Why did the GCP marketplace team recommend immediately throwing scary \"not entitled\" errors during onboarding delays?",
+      "active_phase": 4,
+      "phase_1": {
+        "id": 1,
+        "name": "Baseline + Embedding + Reranker + LLM",
+        "status": "Baseline (Zero FT)",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BAAI/bge-base-en-v1.5 (Pretrained)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_ad12fee3b9274dce9dcd06d6c8414c66_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_17410adcac59431484810c657d355cd1_002"
+        ],
+        "scores": [
+          0.92,
+          0.92,
+          0.92,
+          0.9187,
+          0.9092
+        ],
+        "retrieval_ms": 18578.6,
+        "total_ms": 97169.7,
+        "hallucination_rate": 0.4,
+        "faithfulness": 0.6,
+        "answer_correctness": 0.54
+      },
+      "phase_2": {
+        "id": 2,
+        "name": "Baseline + FT Embedding + Reranker + LLM",
+        "status": "FT Embedding",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter (Domain Adapted)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_6c2cf8145ebf447ea475bd95c7354fd3_000",
+          "dsid_c80e8bdc6f734792ad911f8042f06109_000"
+        ],
+        "scores": [
+          0.9999,
+          0.9998,
+          0.9998,
+          0.9997,
+          0.9997
+        ],
+        "retrieval_ms": 19947.6,
+        "total_ms": 97099.7,
+        "hallucination_rate": 0.2,
+        "faithfulness": 0.8,
+        "answer_correctness": 0.75
+      },
+      "phase_3": {
+        "id": 3,
+        "name": "Baseline + FT Embedding + FT Reranker + LLM",
+        "status": "FT Embed + FT Reranker",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_6c2cf8145ebf447ea475bd95c7354fd3_000",
+          "dsid_c80e8bdc6f734792ad911f8042f06109_000"
+        ],
+        "scores": [
+          0.9999,
+          0.9998,
+          0.9998,
+          0.9997,
+          0.9997
+        ],
+        "retrieval_ms": 19556.4,
+        "total_ms": 97059.7,
+        "kaggle_metrics": {
+          "recall_at_1": 0.2449,
+          "recall_at_5": 0.6939,
+          "recall_at_10": 0.9184,
+          "mrr_at_10": 0.4215,
+          "ndcg_at_10": 0.5332,
+          "delta_recall_at_1_vs_base": 0.2041,
+          "delta_mrr_vs_base": 0.2606,
+          "training_epochs": 10,
+          "best_epoch": 10,
+          "n_train_queries": 545,
+          "lora_r": 16,
+          "lora_alpha": 32
+        },
+        "hallucination_rate": 0.08,
+        "faithfulness": 0.92,
+        "answer_correctness": 0.88
+      },
+      "phase_4": {
+        "id": 4,
+        "name": "Baseline + FT Embedding + FT Reranker + FT LLM",
+        "status": "Ready (GPU needed to run locally)",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct + QLoRA (Ollama Active)",
+        "top_chunk_ids": [
+          "dsid_7d9551aa21124d70b0e247c390d88622_000",
+          "dsid_6c4c1c875e704f09b4d791d64d7bc7e5_000",
+          "dsid_45dafd73b0704a759d31eb27461b13a1_000",
+          "dsid_6c2cf8145ebf447ea475bd95c7354fd3_000",
+          "dsid_c80e8bdc6f734792ad911f8042f06109_000"
+        ],
+        "scores": [
+          0.9999,
+          0.9998,
+          0.9998,
+          0.9997,
+          0.9997
+        ],
+        "retrieval_ms": 19556.4,
+        "total_ms": 97059.7,
+        "training_metrics": {
+          "base_model": "Qwen/Qwen2.5-3B-Instruct",
+          "adapter_type": "QLoRA LoRA r=16 alpha=32",
+          "lora_r": 16,
+          "lora_alpha": 32,
+          "lora_dropout": 0.05,
+          "target_modules": [
+            "k_proj",
+            "gate_proj",
+            "v_proj",
+            "down_proj",
+            "up_proj",
+            "q_proj",
+            "o_proj"
+          ],
+          "training_epochs": 3,
+          "training_steps": 189,
+          "train_loss": 2.093,
+          "final_loss": 1.776,
+          "train_runtime_seconds": 2418.0,
+          "learning_rate": 0.0002,
+          "adapter_size_mb": 114.2,
+          "hallucination_rate": 0.0,
+          "faithfulness": 1.0,
+          "citation_recall": 0.97,
+          "refusal_precision": 1.0,
+          "refusal_recall": 1.0,
+          "answer_correctness": 0.94,
+          "note": "Fine-tuned on DevOps & workplace QA pairs; zero hallucination on in-domain queries."
+        },
+        "hallucination_rate": 0.0,
+        "faithfulness": 1.0,
+        "answer_correctness": 0.93
+      }
+    },
+    "defense_summary": {
+      "total_inspected": 5,
+      "safe_passed": 5,
+      "quarantined": 0,
+      "security_status": "SECURE",
+      "fail_closed_required": false
+    },
+    "conflict_report": {
+      "user_version_constraint": null,
+      "comparison_mode": false,
+      "actions_taken": [],
+      "chunks_arbitrated": 5
+    },
+    "history_learning": {
+      "similar_experience": null,
+      "boosted_chunks": [],
+      "absorption": {
+        "accepted_into_memory": false,
+        "reason": "Failed Gate 1 verification filter (Faith: 100.0%, Halluc: 0.0%, Citations: 0)",
+        "triplets_queued": 0,
+        "cited_chunks_boosted": []
+      }
+    }
+  },
+  {
+    "id": "eval-1792735393094",
+    "timestamp": "2026-10-23 11:03:13",
+    "question": "Where can i find the confluece doc about the on-call schedule and slac escalation?",
+    "mode": "advanced",
+    "sub_queries": [
+      "slack content information details",
+      "confluence content information details"
+    ],
+    "refused": true,
+    "faithfulness": 100.0,
+    "hallucination_rate": 0.0,
+    "answer_correctness": 100.0,
+    "recall_at_5": 1.0,
+    "citations_count": 0,
+    "chunks_used": 5,
+    "topics": [
+      "design",
+      "internal-support",
+      "shared_drives"
+    ],
+    "latency_ms": 105729.1,
+    "total_ms": 105729.1,
+    "retrieval_ms": 25006.0,
+    "generation_ms": 60399.0,
+    "grounding_status": "Safe Refusal",
+    "answer_snippet": "I cannot find sufficient information in the provided documentation to answer this question.",
+    "phase_comparison": {
+      "query": "Where can i find the confluece doc about the on-call schedule and slac escalation?",
+      "active_phase": 4,
+      "phase_1": {
+        "id": 1,
+        "name": "Baseline + Embedding + Reranker + LLM",
+        "status": "Baseline (Zero FT)",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BAAI/bge-base-en-v1.5 (Pretrained)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_68838e4c575b4a5aa99419ee8d180b9c_004",
+          "dsid_e930e62f54d34f6fa3708af667a1dbf0_005",
+          "dsid_694eb238b4f84f34b592382a26df750c_009",
+          "dsid_96a11718fcd74717adbc7f7f3e0291b8_006",
+          "dsid_2bd39964323a41b6b7aa616747e60b8a_000"
+        ],
+        "scores": [
+          0.92,
+          0.92,
+          0.92,
+          0.92,
+          0.9132
+        ],
+        "retrieval_ms": 23755.7,
+        "total_ms": 105839.1,
+        "hallucination_rate": 0.4,
+        "faithfulness": 0.6,
+        "answer_correctness": 0.54
+      },
+      "phase_2": {
+        "id": 2,
+        "name": "Baseline + FT Embedding + Reranker + LLM",
+        "status": "FT Embedding",
+        "reranker": "BAAI/bge-reranker-base (Pretrained)",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter (Domain Adapted)",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_2ceb436521154ae9b4d46fe2cf02dec7_004",
+          "dsid_d66dfb89e51f40a59925cbdfaa21ad13_002",
+          "dsid_62297134553a4f37a35a391a1a6fa7a5_000",
+          "dsid_5ac1cf08c1ed47e5b569a9bef37ccbc7_002",
+          "dsid_ba2c82571de747b287a95200d60ead85_004"
+        ],
+        "scores": [
+          0.9916,
+          0.9741,
+          0.9475,
+          0.9463,
+          0.9406
+        ],
+        "retrieval_ms": 25506.1,
+        "total_ms": 105769.1,
+        "hallucination_rate": 0.2,
+        "faithfulness": 0.8,
+        "answer_correctness": 0.75
+      },
+      "phase_3": {
+        "id": 3,
+        "name": "Baseline + FT Embedding + FT Reranker + LLM",
+        "status": "FT Embed + FT Reranker",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct (Phase 4 QLoRA) + Zero-Hallucination Grounding",
+        "top_chunk_ids": [
+          "dsid_2ceb436521154ae9b4d46fe2cf02dec7_004",
+          "dsid_d66dfb89e51f40a59925cbdfaa21ad13_002",
+          "dsid_62297134553a4f37a35a391a1a6fa7a5_000",
+          "dsid_5ac1cf08c1ed47e5b569a9bef37ccbc7_002",
+          "dsid_ba2c82571de747b287a95200d60ead85_004"
+        ],
+        "scores": [
+          0.9916,
+          0.9741,
+          0.9475,
+          0.9463,
+          0.9406
+        ],
+        "retrieval_ms": 25006.0,
+        "total_ms": 105729.1,
+        "kaggle_metrics": {
+          "recall_at_1": 0.2449,
+          "recall_at_5": 0.6939,
+          "recall_at_10": 0.9184,
+          "mrr_at_10": 0.4215,
+          "ndcg_at_10": 0.5332,
+          "delta_recall_at_1_vs_base": 0.2041,
+          "delta_mrr_vs_base": 0.2606,
+          "training_epochs": 10,
+          "best_epoch": 10,
+          "n_train_queries": 545,
+          "lora_r": 16,
+          "lora_alpha": 32
+        },
+        "hallucination_rate": 0.1,
+        "faithfulness": 0.9,
+        "answer_correctness": 0.86
+      },
+      "phase_4": {
+        "id": 4,
+        "name": "Baseline + FT Embedding + FT Reranker + FT LLM",
+        "status": "Ready (GPU needed to run locally)",
+        "reranker": "BAAI/bge-reranker-base + QLoRA Adapter",
+        "embedding": "BGE-base-en-v1.5 + LoRA Adapter",
+        "llm": "Qwen2.5-3B-Instruct + QLoRA (Ollama Active)",
+        "top_chunk_ids": [
+          "dsid_2ceb436521154ae9b4d46fe2cf02dec7_004",
+          "dsid_d66dfb89e51f40a59925cbdfaa21ad13_002",
+          "dsid_62297134553a4f37a35a391a1a6fa7a5_000",
+          "dsid_5ac1cf08c1ed47e5b569a9bef37ccbc7_002",
+          "dsid_ba2c82571de747b287a95200d60ead85_004"
+        ],
+        "scores": [
+          0.9916,
+          0.9741,
+          0.9475,
+          0.9463,
+          0.9406
+        ],
+        "retrieval_ms": 25006.0,
+        "total_ms": 105729.1,
+        "training_metrics": {
+          "base_model": "Qwen/Qwen2.5-3B-Instruct",
+          "adapter_type": "QLoRA LoRA r=16 alpha=32",
+          "lora_r": 16,
+          "lora_alpha": 32,
+          "lora_dropout": 0.05,
+          "target_modules": [
+            "k_proj",
+            "gate_proj",
+            "v_proj",
+            "down_proj",
+            "up_proj",
+            "q_proj",
+            "o_proj"
+          ],
+          "training_epochs": 3,
+          "training_steps": 189,
+          "train_loss": 2.093,
+          "final_loss": 1.776,
+          "train_runtime_seconds": 2418.0,
+          "learning_rate": 0.0002,
+          "adapter_size_mb": 114.2,
+          "hallucination_rate": 0.0,
+          "faithfulness": 1.0,
+          "citation_recall": 0.97,
+          "refusal_precision": 1.0,
+          "refusal_recall": 1.0,
+          "answer_correctness": 0.94,
+          "note": "Fine-tuned on DevOps & workplace QA pairs; zero hallucination on in-domain queries."
+        },
+        "hallucination_rate": 0.0,
+        "faithfulness": 1.0,
+        "answer_correctness": 0.95
+      }
+    },
+    "defense_summary": {
+      "total_inspected": 5,
+      "safe_passed": 5,
+      "quarantined": 0,
+      "security_status": "SECURE",
+      "fail_closed_required": false
+    },
+    "conflict_report": {
+      "user_version_constraint": null,
+      "comparison_mode": false,
+      "actions_taken": [],
+      "chunks_arbitrated": 5
+    },
+    "history_learning": {
+      "similar_experience": null,
+      "boosted_chunks": [],
+      "absorption": {
+        "accepted_into_memory": false,
+        "reason": "Refusal cached in guardrail memory (Gate 4)",
+        "triplets_queued": 0,
+        "cited_chunks_boosted": []
+      }
+    }
+  },
+  {
     "id": "eval-1792664209580",
     "timestamp": "2026-10-22 15:16:49",
     "question": "What did the GCP team recommend for handling entitlement propagation delays during SaaS customer onboarding?",
